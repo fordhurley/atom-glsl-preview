@@ -86,6 +86,8 @@ module.exports =
 			else
 				createMarkdownPreviewView(filePath: pathname)
 
+		@toggle()
+
 	toggle: ->
 		if isMarkdownPreviewView(atom.workspace.getActivePaneItem())
 			atom.workspace.destroyActivePaneItem()
@@ -112,7 +114,6 @@ module.exports =
 			false
 
 	addPreviewForEditor: (editor) ->
-		alert 'x'
 		uri = @uriForEditor(editor)
 		previousActivePane = atom.workspace.getActivePane()
 		options =
@@ -137,10 +138,10 @@ module.exports =
 		editor = atom.workspace.getActiveTextEditor()
 		return unless editor?
 
-		renderer ?= require './renderer'
-		text = editor.getSelectedText() or editor.getText()
-		renderer.toHTML text, editor.getPath(), editor.getGrammar(), (error, html) ->
-			if error
-				console.warn('Copying Markdown as HTML failed', error)
-			else
-				atom.clipboard.write(html)
+		# renderer ?= require './renderer'
+		# text = editor.getSelectedText() or editor.getText()
+		# renderer.toHTML text, editor.getPath(), editor.getGrammar(), (error, html) ->
+		# 	if error
+		# 		console.warn('Copying Markdown as HTML failed', error)
+		# 	else
+		# 		atom.clipboard.write(html)

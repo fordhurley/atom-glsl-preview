@@ -1,4 +1,5 @@
 path = require 'path'
+THREE = require '../three'
 
 {Emitter, Disposable, CompositeDisposable, File} = require 'atom'
 {$, $$$, ScrollView} = require 'atom-space-pen-views'
@@ -10,284 +11,373 @@ renderer = require './renderer'
 
 module.exports =
 class MarkdownPreviewView extends ScrollView
-  @content: ->
-    @div class: 'markdown-preview native-key-bindings', tabindex: -1
+	@content: ->
+		@div class: 'markdown-preview native-key-bindings', tabindex: -1
 
-  constructor: ({@editorId, @filePath}) ->
-    super
-    @emitter = new Emitter
-    @disposables = new CompositeDisposable
-    @loaded = false
+	constructor: ({@editorId, @filePath}) ->
+		super
+		@emitter = new Emitter
+		@disposables = new CompositeDisposable
+		@loaded = false
 
-  attached: ->
-    return if @isAttached
-    @isAttached = true
+		# Setup webgl
+		@renderer = new THREE.WebGLRenderer()
+		@renderer.setPixelRatio( window.devicePixelRatio )
 
-    if @editorId?
-      @resolveEditor(@editorId)
-    else
-      if atom.workspace?
-        @subscribeToFilePath(@filePath)
-      else
-        @disposables.add atom.packages.onDidActivateInitialPackages =>
-          @subscribeToFilePath(@filePath)
+		[width, height] = @_getPaneSize()
 
-  serialize: ->
-    deserializer: 'MarkdownPreviewView'
-    filePath: @getPath() ? @filePath
-    editorId: @editorId
+		console.log width, height
 
-  destroy: ->
-    @disposables.dispose()
+		@renderer.setSize( width, height )
+		@element.appendChild( @renderer.domElement )
 
-  onDidChangeTitle: (callback) ->
-    @emitter.on 'did-change-title', callback
+		console.log '@element', @element
 
-  onDidChangeModified: (callback) ->
-    # No op to suppress deprecation warning
-    new Disposable
+		@scene = new THREE.Scene()
 
-  onDidChangeMarkdown: (callback) ->
-    @emitter.on 'did-change-markdown', callback
+		@camera   = new THREE.Camera()
+		@camera.position.z = 1
 
-  subscribeToFilePath: (filePath) ->
-    @file = new File(filePath)
-    @emitter.emit 'did-change-title'
-    @handleEvents()
-    @renderMarkdown()
+		geometry = new THREE.PlaneBufferGeometry( 2, 2 )
 
-  resolveEditor: (editorId) ->
-    resolve = =>
-      @editor = @editorForId(editorId)
+		@uniforms = {
+			u_time: { type: "f", value: 1.0 },
+			u_resolution: { type: "v2", value: new THREE.Vector2() },
+			u_mouse: { type: "v2", value: new THREE.Vector2() }
+		}
 
-      if @editor?
-        @emitter.emit 'did-change-title' if @editor?
-        @handleEvents()
-        @renderMarkdown()
-      else
-        # The editor this preview was created for has been closed so close
-        # this preview since a preview cannot be rendered without an editor
-        atom.workspace?.paneForItem(this)?.destroyItem(this)
+		material = new THREE.ShaderMaterial( {
+			uniforms: @uniforms,
+			vertexShader: @_vertexShader()
+			fragmentShader: @_fragmentShader()
+		} );
 
-    if atom.workspace?
-      resolve()
-    else
-      @disposables.add atom.packages.onDidActivateInitialPackages(resolve)
+		@scene.add( new THREE.Mesh( geometry, material ) )
 
-  editorForId: (editorId) ->
-    for editor in atom.workspace.getTextEditors()
-      return editor if editor.id?.toString() is editorId.toString()
-    null
+		window.addEventListener( 'mousemove', @_onMouseMove, false )
 
-  handleEvents: ->
-    @disposables.add atom.grammars.onDidAddGrammar => _.debounce((=> @renderMarkdown()), 250)
-    @disposables.add atom.grammars.onDidUpdateGrammar _.debounce((=> @renderMarkdown()), 250)
+		@_onResize()
+		@_update()
 
-    atom.commands.add @element,
-      'core:move-up': =>
-        @scrollUp()
-      'core:move-down': =>
-        @scrollDown()
-      'core:save-as': (event) =>
-        event.stopPropagation()
-        @saveAs()
-      'core:copy': (event) =>
-        event.stopPropagation() if @copyToClipboard()
-      'markdown-preview:zoom-in': =>
-        zoomLevel = parseFloat(@css('zoom')) or 1
-        @css('zoom', zoomLevel + .1)
-      'markdown-preview:zoom-out': =>
-        zoomLevel = parseFloat(@css('zoom')) or 1
-        @css('zoom', zoomLevel - .1)
-      'markdown-preview:reset-zoom': =>
-        @css('zoom', 1)
+		window.xx = @
 
-    changeHandler = =>
-      @renderMarkdown()
+	_getPaneSize: ->
+		$el = $(@element)
 
-      # TODO: Remove paneForURI call when ::paneForItem is released
-      pane = atom.workspace.paneForItem?(this) ? atom.workspace.paneForURI(@getURI())
-      if pane? and pane isnt atom.workspace.getActivePane()
-        pane.activateItem(this)
+		# [ $(@element).clientWidth, $(@element).clientHeight ]
+		[ 500, 500 ]
 
-    if @file?
-      @disposables.add @file.onDidChange(changeHandler)
-    else if @editor?
-      @disposables.add @editor.getBuffer().onDidStopChanging ->
-        changeHandler() if atom.config.get 'markdown-preview.liveUpdate'
-      @disposables.add @editor.onDidChangePath => @emitter.emit 'did-change-title'
-      @disposables.add @editor.getBuffer().onDidSave ->
-        changeHandler() unless atom.config.get 'markdown-preview.liveUpdate'
-      @disposables.add @editor.getBuffer().onDidReload ->
-        changeHandler() unless atom.config.get 'markdown-preview.liveUpdate'
 
-    @disposables.add atom.config.onDidChange 'markdown-preview.breakOnSingleNewline', changeHandler
+	_onResize: ( event ) =>
 
-    @disposables.add atom.config.observe 'markdown-preview.useGitHubStyle', (useGitHubStyle) =>
-      if useGitHubStyle
-        @element.setAttribute('data-use-github-style', '')
-      else
-        @element.removeAttribute('data-use-github-style')
+		[width, height] = @_getPaneSize()
 
-  renderMarkdown: ->
-    @showLoading() unless @loaded
-    @getMarkdownSource().then (source) => @renderMarkdownText(source) if source?
+		@uniforms.u_resolution.value.x = width
+		@uniforms.u_resolution.value.y = height
 
-  getMarkdownSource: ->
-    if @file?.getPath()
-      @file.read()
-    else if @editor?
-      Promise.resolve(@editor.getText())
-    else
-      Promise.resolve(null)
+	_onMouseMove: ( event ) =>
 
-  getHTML: (callback) ->
-    @getMarkdownSource().then (source) =>
-      return unless source?
+		console.log '_onMouseMove'
 
-      renderer.toHTML source, @getPath(), @getGrammar(), callback
+		[width, height] = @_getPaneSize()
 
-  renderMarkdownText: (text) ->
-    renderer.toDOMFragment text, @getPath(), @getGrammar(), (error, domFragment) =>
-      if error
-        @showError(error)
-      else
-        @loading = false
-        @loaded = true
-        @html(domFragment)
-        @emitter.emit 'did-change-markdown'
-        @originalTrigger('markdown-preview:markdown-changed')
+		@uniforms.u_mouse.value.x = event.x / width
+		@uniforms.u_mouse.value.y = event.y / height
 
-  getTitle: ->
-    if @file?
-      "#{path.basename(@getPath())} Preview"
-    else if @editor?
-      "#{@editor.getTitle()} Preview"
-    else
-      "Markdown Preview"
+	_update: =>
 
-  getIconName: ->
-    "markdown"
+		requestAnimationFrame( @_update )
 
-  getURI: ->
-    if @file?
-      "markdown-preview://#{@getPath()}"
-    else
-      "markdown-preview://editor/#{@editorId}"
+		@uniforms.u_time.value += 0.05
+		@renderer.render( @scene, @camera )
 
-  getPath: ->
-    if @file?
-      @file.getPath()
-    else if @editor?
-      @editor.getPath()
+	_vertexShader: ->
+		return [
+			'void main() {'
+				'gl_Position = vec4( position, 1.0 );'
+			'}'
+		].join('\n')
 
-  getGrammar: ->
-    @editor?.getGrammar()
+	_fragmentShader: ->
+		return [
+			'uniform vec2 u_resolution;'
+			'uniform float u_time;'
 
-  getDocumentStyleSheets: -> # This function exists so we can stub it
-    document.styleSheets
+			'void main() {'
+				'vec2 st = gl_FragCoord.xy/u_resolution.xy;'
+				'gl_FragColor=vec4(st.x,st.y,0.0,1.0);'
+			'}'
+		].join('\n')
 
-  getTextEditorStyles: ->
-    textEditorStyles = document.createElement("atom-styles")
-    textEditorStyles.initialize(atom.styles)
-    textEditorStyles.setAttribute "context", "atom-text-editor"
-    document.body.appendChild textEditorStyles
+	attached: ->
+		return if @isAttached
+		@isAttached = true
 
-    # Extract style elements content
-    Array.prototype.slice.apply(textEditorStyles.childNodes).map (styleElement) ->
-      styleElement.innerText
+		if @editorId?
+			@resolveEditor(@editorId)
+		else
+			if atom.workspace?
+				@subscribeToFilePath(@filePath)
+			else
+				@disposables.add atom.packages.onDidActivateInitialPackages =>
+					@subscribeToFilePath(@filePath)
 
-  getMarkdownPreviewCSS: ->
-    markdowPreviewRules = []
-    ruleRegExp = /\.markdown-preview/
-    cssUrlRefExp = /url\(atom:\/\/markdown-preview\/assets\/(.*)\)/
+	serialize: ->
+		deserializer: 'MarkdownPreviewView'
+		filePath: @getPath() ? @filePath
+		editorId: @editorId
 
-    for stylesheet in @getDocumentStyleSheets()
-      if stylesheet.rules?
-        for rule in stylesheet.rules
-          # We only need `.markdown-review` css
-          markdowPreviewRules.push(rule.cssText) if rule.selectorText?.match(ruleRegExp)?
+	destroy: ->
+		@disposables.dispose()
 
-    markdowPreviewRules
-      .concat(@getTextEditorStyles())
-      .join('\n')
-      .replace(/atom-text-editor/g, 'pre.editor-colors')
-      .replace(/:host/g, '.host') # Remove shadow-dom :host selector causing problem on FF
-      .replace cssUrlRefExp, (match, assetsName, offset, string) -> # base64 encode assets
-        assetPath = path.join __dirname, '../assets', assetsName
-        originalData = fs.readFileSync assetPath, 'binary'
-        base64Data = new Buffer(originalData, 'binary').toString('base64')
-        "url('data:image/jpeg;base64,#{base64Data}')"
+	onDidChangeTitle: (callback) ->
+		@emitter.on 'did-change-title', callback
 
-  showError: (result) ->
-    failureMessage = result?.message
+	onDidChangeModified: (callback) ->
+		# No op to suppress deprecation warning
+		new Disposable
 
-    @html $$$ ->
-      @h2 'Previewing Markdown Failed'
-      @h3 failureMessage if failureMessage?
+	onDidChangeMarkdown: (callback) ->
+		@emitter.on 'did-change-markdown', callback
 
-  showLoading: ->
-    @loading = true
-    @html $$$ ->
-      @div class: 'markdown-spinner', 'Loading Markdown\u2026'
+	subscribeToFilePath: (filePath) ->
+		@file = new File(filePath)
+		@emitter.emit 'did-change-title'
+		@handleEvents()
+		@renderMarkdown()
 
-  copyToClipboard: ->
-    return false if @loading
+	resolveEditor: (editorId) ->
+		resolve = =>
+			@editor = @editorForId(editorId)
 
-    selection = window.getSelection()
-    selectedText = selection.toString()
-    selectedNode = selection.baseNode
+			if @editor?
+				@emitter.emit 'did-change-title' if @editor?
+				@handleEvents()
+				@renderMarkdown()
+			else
+				# The editor this preview was created for has been closed so close
+				# this preview since a preview cannot be rendered without an editor
+				atom.workspace?.paneForItem(this)?.destroyItem(this)
 
-    # Use default copy event handler if there is selected text inside this view
-    return false if selectedText and selectedNode? and (@[0] is selectedNode or $.contains(@[0], selectedNode))
+		if atom.workspace?
+			resolve()
+		else
+			@disposables.add atom.packages.onDidActivateInitialPackages(resolve)
 
-    @getHTML (error, html) ->
-      if error?
-        console.warn('Copying Markdown as HTML failed', error)
-      else
-        atom.clipboard.write(html)
+	editorForId: (editorId) ->
+		for editor in atom.workspace.getTextEditors()
+			return editor if editor.id?.toString() is editorId.toString()
+		null
 
-    true
+	handleEvents: ->
+		@disposables.add atom.grammars.onDidAddGrammar => _.debounce((=> @renderMarkdown()), 250)
+		@disposables.add atom.grammars.onDidUpdateGrammar _.debounce((=> @renderMarkdown()), 250)
 
-  saveAs: ->
-    return if @loading
+		atom.commands.add @element,
+			'core:move-up': =>
+				@scrollUp()
+			'core:move-down': =>
+				@scrollDown()
+			'core:save-as': (event) =>
+				event.stopPropagation()
+				@saveAs()
+			'core:copy': (event) =>
+				event.stopPropagation() if @copyToClipboard()
+			'markdown-preview:zoom-in': =>
+				zoomLevel = parseFloat(@css('zoom')) or 1
+				@css('zoom', zoomLevel + .1)
+			'markdown-preview:zoom-out': =>
+				zoomLevel = parseFloat(@css('zoom')) or 1
+				@css('zoom', zoomLevel - .1)
+			'markdown-preview:reset-zoom': =>
+				@css('zoom', 1)
 
-    filePath = @getPath()
-    title = 'Markdown to HTML'
-    if filePath
-      title = path.parse(filePath).name
-      filePath += '.html'
-    else
-      filePath = 'untitled.md.html'
-      if projectPath = atom.project.getPaths()[0]
-        filePath = path.join(projectPath, filePath)
+		changeHandler = =>
+			@renderMarkdown()
 
-    if htmlFilePath = atom.showSaveDialogSync(filePath)
+			# TODO: Remove paneForURI call when ::paneForItem is released
+			pane = atom.workspace.paneForItem?(this) ? atom.workspace.paneForURI(@getURI())
+			if pane? and pane isnt atom.workspace.getActivePane()
+				pane.activateItem(this)
 
-      @getHTML (error, htmlBody) =>
-        if error?
-          console.warn('Saving Markdown as HTML failed', error)
-        else
+		if @file?
+			@disposables.add @file.onDidChange(changeHandler)
+		else if @editor?
+			@disposables.add @editor.getBuffer().onDidStopChanging ->
+				changeHandler() if atom.config.get 'markdown-preview.liveUpdate'
+			@disposables.add @editor.onDidChangePath => @emitter.emit 'did-change-title'
+			@disposables.add @editor.getBuffer().onDidSave ->
+				changeHandler() unless atom.config.get 'markdown-preview.liveUpdate'
+			@disposables.add @editor.getBuffer().onDidReload ->
+				changeHandler() unless atom.config.get 'markdown-preview.liveUpdate'
 
-          html = """
-            <!DOCTYPE html>
-            <html>
-              <head>
-                  <meta charset="utf-8" />
-                  <title>#{title}</title>
-                  <style>#{@getMarkdownPreviewCSS()}</style>
-              </head>
-              <body class='markdown-preview'>#{htmlBody}</body>
-            </html>""" + "\n" # Ensure trailing newline
+		@disposables.add atom.config.onDidChange 'markdown-preview.breakOnSingleNewline', changeHandler
 
-          fs.writeFileSync(htmlFilePath, html)
-          atom.workspace.open(htmlFilePath)
+		@disposables.add atom.config.observe 'markdown-preview.useGitHubStyle', (useGitHubStyle) =>
+			if useGitHubStyle
+				@element.setAttribute('data-use-github-style', '')
+			else
+				@element.removeAttribute('data-use-github-style')
 
-  isEqual: (other) ->
-    @[0] is other?[0] # Compare DOM elements
+	renderMarkdown: ->
+		@showLoading() unless @loaded
+		@getMarkdownSource().then (source) => @renderMarkdownText(source) if source?
+
+	getMarkdownSource: ->
+		if @file?.getPath()
+			@file.read()
+		else if @editor?
+			Promise.resolve(@editor.getText())
+		else
+			Promise.resolve(null)
+
+	getHTML: (callback) ->
+		# @getMarkdownSource().then (source) =>
+		# 	return unless source?
+		#
+		# 	renderer.toHTML source, @getPath(), @getGrammar(), callback
+
+	renderMarkdownText: (text) ->
+		# renderer.toDOMFragment text, @getPath(), @getGrammar(), (error, domFragment) =>
+		# 	if error
+		# 		@showError(error)
+		# 	else
+		# 		@loading = false
+		# 		@loaded = true
+		# 		@html(domFragment)
+		# 		@emitter.emit 'did-change-markdown'
+		# 		@originalTrigger('markdown-preview:markdown-changed')
+
+	getTitle: ->
+		if @file?
+			"#{path.basename(@getPath())} Preview"
+		else if @editor?
+			"#{@editor.getTitle()} Preview"
+		else
+			"Markdown Preview"
+
+	getIconName: ->
+		"markdown"
+
+	getURI: ->
+		if @file?
+			"markdown-preview://#{@getPath()}"
+		else
+			"markdown-preview://editor/#{@editorId}"
+
+	getPath: ->
+		if @file?
+			@file.getPath()
+		else if @editor?
+			@editor.getPath()
+
+	getGrammar: ->
+		@editor?.getGrammar()
+
+	getDocumentStyleSheets: -> # This function exists so we can stub it
+		document.styleSheets
+
+	getTextEditorStyles: ->
+		textEditorStyles = document.createElement("atom-styles")
+		textEditorStyles.initialize(atom.styles)
+		textEditorStyles.setAttribute "context", "atom-text-editor"
+		document.body.appendChild textEditorStyles
+
+		# Extract style elements content
+		Array.prototype.slice.apply(textEditorStyles.childNodes).map (styleElement) ->
+			styleElement.innerText
+
+	getMarkdownPreviewCSS: ->
+		markdowPreviewRules = []
+		ruleRegExp = /\.markdown-preview/
+		cssUrlRefExp = /url\(atom:\/\/markdown-preview\/assets\/(.*)\)/
+
+		for stylesheet in @getDocumentStyleSheets()
+			if stylesheet.rules?
+				for rule in stylesheet.rules
+					# We only need `.markdown-review` css
+					markdowPreviewRules.push(rule.cssText) if rule.selectorText?.match(ruleRegExp)?
+
+		markdowPreviewRules
+			.concat(@getTextEditorStyles())
+			.join('\n')
+			.replace(/atom-text-editor/g, 'pre.editor-colors')
+			.replace(/:host/g, '.host') # Remove shadow-dom :host selector causing problem on FF
+			.replace cssUrlRefExp, (match, assetsName, offset, string) -> # base64 encode assets
+				assetPath = path.join __dirname, '../assets', assetsName
+				originalData = fs.readFileSync assetPath, 'binary'
+				base64Data = new Buffer(originalData, 'binary').toString('base64')
+				"url('data:image/jpeg;base64,#{base64Data}')"
+
+	showError: (result) ->
+		failureMessage = result?.message
+
+		@html $$$ ->
+			@h2 'Previewing Markdown Failed'
+			@h3 failureMessage if failureMessage?
+
+	showLoading: ->
+		@loading = true
+		# @html $$$ ->
+		# 	@div class: 'markdown-spinner', 'Loading Markdown\u2026'
+
+	copyToClipboard: ->
+		return false if @loading
+
+		selection = window.getSelection()
+		selectedText = selection.toString()
+		selectedNode = selection.baseNode
+
+		# Use default copy event handler if there is selected text inside this view
+		return false if selectedText and selectedNode? and (@[0] is selectedNode or $.contains(@[0], selectedNode))
+
+		@getHTML (error, html) ->
+			if error?
+				console.warn('Copying Markdown as HTML failed', error)
+			else
+				atom.clipboard.write(html)
+
+		true
+
+	saveAs: ->
+		return if @loading
+
+		filePath = @getPath()
+		title = 'Markdown to HTML'
+		if filePath
+			title = path.parse(filePath).name
+			filePath += '.html'
+		else
+			filePath = 'untitled.md.html'
+			if projectPath = atom.project.getPaths()[0]
+				filePath = path.join(projectPath, filePath)
+
+		if htmlFilePath = atom.showSaveDialogSync(filePath)
+
+			@getHTML (error, htmlBody) =>
+				if error?
+					console.warn('Saving Markdown as HTML failed', error)
+				else
+
+					html = """
+						<!DOCTYPE html>
+						<html>
+							<head>
+									<meta charset="utf-8" />
+									<title>#{title}</title>
+									<style>#{@getMarkdownPreviewCSS()}</style>
+							</head>
+							<body class='markdown-preview'>#{htmlBody}</body>
+						</html>""" + "\n" # Ensure trailing newline
+
+					fs.writeFileSync(htmlFilePath, html)
+					atom.workspace.open(htmlFilePath)
+
+	isEqual: (other) ->
+		@[0] is other?[0] # Compare DOM elements
 
 if Grim.includeDeprecatedAPIs
-  MarkdownPreviewView::on = (eventName) ->
-    if eventName is 'markdown-preview:markdown-changed'
-      Grim.deprecate("Use MarkdownPreviewView::onDidChangeMarkdown instead of the 'markdown-preview:markdown-changed' jQuery event")
-    super
+	MarkdownPreviewView::on = (eventName) ->
+		if eventName is 'markdown-preview:markdown-changed'
+			Grim.deprecate("Use MarkdownPreviewView::onDidChangeMarkdown instead of the 'markdown-preview:markdown-changed' jQuery event")
+		super

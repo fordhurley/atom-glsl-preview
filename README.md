@@ -3,7 +3,7 @@
 Show the rendered HTML markdown to the right of the current editor using
 `ctrl-shift-m`.
 
-It can be activated from the editor using the `ctrl-shift-m` key-binding and is
+It can be activated from the editor usin˜g the `ctrl-shift-m` key-binding and is
 currently enabled for `.markdown`, `.md`, `.mdown`, `.mkd`, `.mkdown`, `.ron`, and `.txt` files.
 
 ![markdown-preview](https://cloud.githubusercontent.com/assets/378023/10013086/24cad23e-6149-11e5-90e6-663009210218.png)

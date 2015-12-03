@@ -38,21 +38,15 @@ class MarkdownPreviewView extends ScrollView
 		@camera   = new THREE.Camera()
 		@camera.position.z = 1
 
-		geometry = new THREE.PlaneBufferGeometry( 2, 2 )
-
 		@uniforms = {
 			u_time: { type: "f", value: 1.0 },
 			u_resolution: { type: "v2", value: new THREE.Vector2() },
 			u_mouse: { type: "v2", value: new THREE.Vector2() }
 		}
 
-		material = new THREE.ShaderMaterial( {
-			uniforms: @uniforms,
-			vertexShader: @_vertexShader()
-			fragmentShader: @_fragmentShader()
-		} );
+		@mesh = null
 
-		@scene.add( new THREE.Mesh( geometry, material ) )
+		@_createMesh()
 
 		window.addEventListener( 'mousemove', @_onMouseMove, false )
 
@@ -60,6 +54,27 @@ class MarkdownPreviewView extends ScrollView
 		@_update()
 
 		window.xx = @
+
+	_createMesh: ( text = null ) ->
+
+		@scene.remove( @mesh )
+
+		if text? and text.length > 0
+			fragShader = text
+		else
+			fragShader = @_fragmentShader()
+
+		material = new THREE.ShaderMaterial( {
+			uniforms: @uniforms,
+			vertexShader: @_vertexShader()
+			fragmentShader: fragShader
+		} );
+
+		try
+			@mesh = new THREE.Mesh( new THREE.PlaneBufferGeometry( 2, 2 ), material )
+			@scene.add( @mesh )
+		catch error
+			console.log error
 
 	_getPaneSize: ->
 		$el = $(@element)
@@ -76,8 +91,6 @@ class MarkdownPreviewView extends ScrollView
 		@uniforms.u_resolution.value.y = height
 
 	_onMouseMove: ( event ) =>
-
-		console.log '_onMouseMove'
 
 		[width, height] = @_getPaneSize()
 
@@ -238,9 +251,17 @@ class MarkdownPreviewView extends ScrollView
 		# 	renderer.toHTML source, @getPath(), @getGrammar(), callback
 
 	renderMarkdownText: (text) ->
+
+		console.log 'renderMarkdownText', text
+
+		try
+			@_createMesh( text )
+		catch error
+			@showError(error)
+
 		# renderer.toDOMFragment text, @getPath(), @getGrammar(), (error, domFragment) =>
 		# 	if error
-		# 		@showError(error)
+		# 		@showError(error)x
 		# 	else
 		# 		@loading = false
 		# 		@loaded = true

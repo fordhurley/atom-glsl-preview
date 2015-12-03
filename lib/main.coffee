@@ -37,11 +37,6 @@ module.exports =
 				'text.plain.null-grammar'
 			]
 			description: 'List of scopes for languages for which previewing is enabled. See [this README](https://github.com/atom/spell-check#spell-check-package-) for more information on finding the correct scope for a specific language.'
-		useGitHubStyle:
-			title: 'Use GitHub.com style'
-			type: 'boolean'
-			default: false
-			description: 'Use the same CSS styles for preview as the ones used on GitHub.com.'
 
 	activate: ->
 		atom.deserializers.add
@@ -53,19 +48,10 @@ module.exports =
 		atom.commands.add 'atom-workspace',
 			'markdown-preview:toggle': =>
 				@toggle()
-			'markdown-preview:copy-html': =>
-				@copyHtml()
-			'markdown-preview:toggle-break-on-single-newline': ->
-				keyPath = 'markdown-preview.breakOnSingleNewline'
-				atom.config.set(keyPath, not atom.config.get(keyPath))
 
 		previewFile = @previewFile.bind(this)
-		atom.commands.add '.tree-view .file .name[data-name$=\\.markdown]', 'markdown-preview:preview-file', previewFile
-		atom.commands.add '.tree-view .file .name[data-name$=\\.md]', 'markdown-preview:preview-file', previewFile
-		atom.commands.add '.tree-view .file .name[data-name$=\\.mdown]', 'markdown-preview:preview-file', previewFile
-		atom.commands.add '.tree-view .file .name[data-name$=\\.mkd]', 'markdown-preview:preview-file', previewFile
-		atom.commands.add '.tree-view .file .name[data-name$=\\.mkdown]', 'markdown-preview:preview-file', previewFile
-		atom.commands.add '.tree-view .file .name[data-name$=\\.ron]', 'markdown-preview:preview-file', previewFile
+		atom.commands.add '.tree-view .file .name[data-name$=\\.glsl]', 'markdown-preview:preview-file', previewFile
+		atom.commands.add '.tree-view .file .name[data-name$=\\.frag]', 'markdown-preview:preview-file', previewFile
 		atom.commands.add '.tree-view .file .name[data-name$=\\.txt]', 'markdown-preview:preview-file', previewFile
 
 		atom.workspace.addOpener (uriToOpen) ->
@@ -133,15 +119,3 @@ module.exports =
 			return
 
 		atom.workspace.open "markdown-preview://#{encodeURI(filePath)}", searchAllPanes: true
-
-	copyHtml: ->
-		editor = atom.workspace.getActiveTextEditor()
-		return unless editor?
-
-		# renderer ?= require './renderer'
-		# text = editor.getSelectedText() or editor.getText()
-		# renderer.toHTML text, editor.getPath(), editor.getGrammar(), (error, html) ->
-		# 	if error
-		# 		console.warn('Copying Markdown as HTML failed', error)
-		# 	else
-		# 		atom.clipboard.write(html)

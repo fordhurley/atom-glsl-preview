@@ -1,25 +1,16 @@
 {
-  "name": "markdown-preview",
-  "version": "0.157.0",
+  "name": "glsl-preview",
+  "version": "0.1.0",
   "main": "./lib/main",
-  "description": "Open a rendered version of the Markdown in the current editor with `ctrl-shift-m`.",
-  "repository": "https://github.com/atom/markdown-preview",
+  "description": "Live code fragment shaders in the current editor with `ctrl-g`.",
+  "repository": "https://github.com/davidpaulrosser/atom-glsl-preview",
   "license": "MIT",
   "engines": {
     "atom": "*"
   },
   "dependencies": {
     "atom-space-pen-views": "^2.0.0",
-    "cheerio": "0.15.0",
     "fs-plus": "^2.0.0",
-    "grim": "^1.2.1",
-    "highlights": "^1.2",
-    "roaster": "^1.1.2",
-    "temp": "^0.8.1",
-    "underscore-plus": "^1.0.0",
-    "wrench": "^1.5.0"
-  },
-  "devDependencies": {
-    "coffeelint": "^1.9.7"
+    "underscore-plus": "^1.0.0"
   }
 }

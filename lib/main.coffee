@@ -1,27 +1,22 @@
 url = require 'url'
 fs = require 'fs-plus'
 
-MarkdownPreviewView = null # Defer until used
-renderer = null # Defer until used
+GlslPreviewView = null # Defer until used
 
-createMarkdownPreviewView = (state) ->
-	MarkdownPreviewView ?= require './markdown-preview-view'
-	new MarkdownPreviewView(state)
+createGlslPreviewView = (state) ->
+	GlslPreviewView ?= require './glsl-preview-view'
+	new GlslPreviewView(state)
 
-isMarkdownPreviewView = (object) ->
-	MarkdownPreviewView ?= require './markdown-preview-view'
-	object instanceof MarkdownPreviewView
+isGlslPreviewView = (object) ->
+	GlslPreviewView ?= require './glsl-preview-view'
+	object instanceof GlslPreviewView
 
 module.exports =
 	config:
-		breakOnSingleNewline:
-			type: 'boolean'
-			default: false
-			description: 'In Markdown, a single newline character doesn\'t cause a line break in the generated HTML. In GitHub Flavored Markdown, that is not true. Enable this config option to insert line breaks in redenred HTML for single newlines in Markdown source.'
 		liveUpdate:
 			type: 'boolean'
 			default: true
-			description: 'Re-render the preview as the contents of the source changes, without requiring the source buffer to be saved. If disabled, the preview is re-rendered only when the buffer is saved to disk.'
+			description: 'Live reload the shader when the source changes, without requiring the source buffer to be saved. If disabled, the shader is re-loaded only when the buffer is saved to disk.'
 		openPreviewInSplitPane:
 			type: 'boolean'
 			default: true
@@ -29,30 +24,23 @@ module.exports =
 		grammars:
 			type: 'array'
 			default: [
-				'source.gfm'
-				'source.litcoffee'
-				'text.html.basic'
-				'text.md'
-				'text.plain'
-				'text.plain.null-grammar'
+				'source.glsl'
 			]
 			description: 'List of scopes for languages for which previewing is enabled. See [this README](https://github.com/atom/spell-check#spell-check-package-) for more information on finding the correct scope for a specific language.'
 
 	activate: ->
 		atom.deserializers.add
-			name: 'MarkdownPreviewView'
+			name: 'GlslPreviewView'
 			deserialize: (state) ->
 				if state.editorId or fs.isFileSync(state.filePath)
-					createMarkdownPreviewView(state)
+					createGlslPreviewView(state)
 
 		atom.commands.add 'atom-workspace',
-			'markdown-preview:toggle': =>
+			'glsl-preview:toggle': =>
 				@toggle()
 
 		previewFile = @previewFile.bind(this)
-		atom.commands.add '.tree-view .file .name[data-name$=\\.glsl]', 'markdown-preview:preview-file', previewFile
-		atom.commands.add '.tree-view .file .name[data-name$=\\.frag]', 'markdown-preview:preview-file', previewFile
-		atom.commands.add '.tree-view .file .name[data-name$=\\.txt]', 'markdown-preview:preview-file', previewFile
+		atom.commands.add '.tree-view .file .name[data-name$=\\.glsl]', 'glsl-preview:preview-file', previewFile
 
 		atom.workspace.addOpener (uriToOpen) ->
 			try
@@ -60,7 +48,7 @@ module.exports =
 			catch error
 				return
 
-			return unless protocol is 'markdown-preview:'
+			return unless protocol is 'glsl-preview:'
 
 			try
 				pathname = decodeURI(pathname) if pathname
@@ -68,27 +56,28 @@ module.exports =
 				return
 
 			if host is 'editor'
-				createMarkdownPreviewView(editorId: pathname.substring(1))
+				createGlslPreviewView(editorId: pathname.substring(1))
 			else
-				createMarkdownPreviewView(filePath: pathname)
+				createGlslPreviewView(filePath: pathname)
 
 		@toggle()
 
 	toggle: ->
-		if isMarkdownPreviewView(atom.workspace.getActivePaneItem())
+		if isGlslPreviewView(atom.workspace.getActivePaneItem())
 			atom.workspace.destroyActivePaneItem()
 			return
 
 		editor = atom.workspace.getActiveTextEditor()
 		return unless editor?
 
-		grammars = atom.config.get('markdown-preview.grammars') ? []
+		grammars = atom.config.get('glsl-preview.grammars') ? []
+
 		return unless editor.getGrammar().scopeName in grammars
 
 		@addPreviewForEditor(editor) unless @removePreviewForEditor(editor)
 
 	uriForEditor: (editor) ->
-		"markdown-preview://editor/#{editor.id}"
+		"glsl-preview://editor/#{editor.id}"
 
 	removePreviewForEditor: (editor) ->
 		uri = @uriForEditor(editor)
@@ -104,13 +93,14 @@ module.exports =
 		previousActivePane = atom.workspace.getActivePane()
 		options =
 			searchAllPanes: true
-		if atom.config.get('markdown-preview.openPreviewInSplitPane')
+		if atom.config.get('glsl-preview.openPreviewInSplitPane')
 			options.split = 'right'
-		atom.workspace.open(uri, options).then (markdownPreviewView) ->
-			if isMarkdownPreviewView(markdownPreviewView)
+		atom.workspace.open(uri, options).then (GlslPreviewView) ->
+			if isGlslPreviewView(GlslPreviewView)
 				previousActivePane.activate()
 
 	previewFile: ({target}) ->
+
 		filePath = target.dataset.path
 		return unless filePath
 
@@ -118,4 +108,4 @@ module.exports =
 			@addPreviewForEditor(editor)
 			return
 
-		atom.workspace.open "markdown-preview://#{encodeURI(filePath)}", searchAllPanes: true
+		atom.workspace.open "glsl-preview://#{encodeURI(filePath)}", searchAllPanes: true

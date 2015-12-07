@@ -1,0 +1,15 @@
+'menu': [
+  'label': 'Packages'
+  'submenu': [
+    'label': 'GLSL Preview'
+    'submenu': [
+      'label': 'Preview shader'
+      'command': 'glsl-preview:toggle'
+    ]
+  ]
+]
+
+'context-menu':
+  '.atom-text-editor': [
+    {label: 'Preview shader', command: 'glsl-preview:preview'}
+  ]

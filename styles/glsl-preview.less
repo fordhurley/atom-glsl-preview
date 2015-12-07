@@ -1,7 +1,4 @@
-
-// Global Markdown Preview styles
-
-.markdown-preview {
+.glsl-preview {
   atom-text-editor {
     // only show scrollbars on hover
     .scrollbars-visible-always &::shadow {
@@ -19,16 +16,22 @@
   }
 }
 
-.markdown-spinner {
-  margin: auto;
-  background-image: url(images/octocat-spinner-128.gif);
-  background-repeat: no-repeat;
-  background-size: 64px;
-  background-position: top center;
-  padding-top: 70px;
-  text-align: center;
+.glsl-preview{
+	padding: 0 !important;
+	width: 100%;
+	height: 100%;
+
+	&.shader-compile-error{
+		opacity: 0.5;
+	}
 }
 
-.markdown-preview:not([data-use-github-style]){
-	padding: 0 !important;
+// Set the pane title to red if there's a shader error
+.tab.shader-compile-error .title{
+	color: red;
+}
+
+// Keep preview 100% opacity all the time
+atom-pane.glsl-preview-pane:not(.active){
+	opacity: 1;
 }

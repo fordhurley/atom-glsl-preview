@@ -17,8 +17,8 @@ void main() {
 	float radius = map(sin(iGlobalTime), -1.0, 1.0, 0.25, 0.3);
 
 	if(distance(uv.xy, mouse) < radius){
-	 	color.x = 2.0 - color.x;
-	 	color.y = 2.0 - color.y;
+	 	color.x = 1.0 - color.x;
+	 	color.y = 1.0 - color.y;
 	}
 
 	gl_FragColor=vec4(color,1.0);

@@ -47,7 +47,7 @@ class GlslPreviewView extends ScrollView
 
 		# Setup webgl
 		@renderer = new THREE.WebGLRenderer()
-		@renderer.setPixelRatio( window.devicePixelRatio )
+		@renderer.setPixelRatio( @_devicePixelRatio() )
 
 		[width, height] = @_getPaneSize()
 
@@ -123,17 +123,21 @@ class GlslPreviewView extends ScrollView
 
 		[width, height] = @_getPaneSize()
 
-		@uniforms.iResolution.value.x = width
-		@uniforms.iResolution.value.y = height
+		ratio = @_devicePixelRatio()
+
+		@uniforms.iResolution.value.x = width * ratio
+		@uniforms.iResolution.value.y = height * ratio
 
 		@renderer.setSize( width, height )
+
+	_devicePixelRatio: -> window.devicePixelRatio or 1
 
 	_onMouseMove: ( event ) =>
 
 		[width, height] = @_getPaneSize()
 
-		@uniforms.iMouse.value.x = (event.offsetX / width) * 2
-		@uniforms.iMouse.value.y = (1 - (event.offsetY / height)) * 2
+		@uniforms.iMouse.value.x = event.offsetX / width
+		@uniforms.iMouse.value.y = 1 - (event.offsetY / height)
 
 	_update: =>
 
@@ -174,10 +178,10 @@ class GlslPreviewView extends ScrollView
 				'uv.x *= aspect;'
 				'vec2 mouse = vec2(iMouse.xy);'
 				'mouse.x *= aspect;'
-				'float radius = map(sin(iGlobalTime), -1.0, 1.0, 0.25, 0.5);'
+				'float radius = map(sin(iGlobalTime), -1.0, 1.0, 0.25, 0.3);'
 				'if(distance(uv.xy, mouse) < radius){'
-				 	'color.x = 2.0 - color.x;'
-				 	'color.y = 2.0 - color.y;'
+				 	'color.x = 1.0 - color.x;'
+				 	'color.y = 1.0 - color.y;'
 				'}'
 				'gl_FragColor=vec4(color,1.0);'
 			'}'

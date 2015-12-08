@@ -5,6 +5,8 @@ Live code fragment shaders in the atom editor by using
 
 File types supported: `.glsl` files.
 
+Make sure you install [language-glsl](https://github.com/hughsk/language-glsl) for syntax highlighting.
+
 ![glsl-preview](https://cdn.rawgit.com/davidpaulrosser/atom-glsl-preview/master/assets/screenshot.jpg)
 
 ## Uniforms

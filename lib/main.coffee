@@ -25,6 +25,7 @@ module.exports =
 			type: 'array'
 			default: [
 				'source.glsl'
+				'text.plain.null-grammar'
 			]
 			description: 'List of scopes for languages for which previewing is enabled. See [this README](https://github.com/atom/spell-check#spell-check-package-) for more information on finding the correct scope for a specific language.'
 
@@ -63,6 +64,7 @@ module.exports =
 		@toggle()
 
 	toggle: ->
+
 		if isGlslPreviewView(atom.workspace.getActivePaneItem())
 			atom.workspace.destroyActivePaneItem()
 			return

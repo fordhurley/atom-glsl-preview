@@ -23,13 +23,9 @@ closest = (el, selector) ->
 			matchesFn = fn
 			return true
 		false
-	console.log 'el', el
-	console.log 'el', el.parentElement
 	# traverse parents
 	while el != null
 		parent = el.parentElement
-
-		console.log 'parent', parent
 		if parent != null and parent[matchesFn](selector)
 			return parent
 		el = parent
@@ -83,9 +79,11 @@ class GlslPreviewView extends ScrollView
 	renderShader: ( text = null ) ->
 
 		if text? and text.length > 0
-			fragShader = text
+			fragShader = @_defaultUniforms() + text
 		else
 			fragShader = @_fragmentShader()
+
+		console.log 'fragShader', fragShader
 
 		material = new THREE.ShaderMaterial( {
 			uniforms: @uniforms,
@@ -156,11 +154,16 @@ class GlslPreviewView extends ScrollView
 			'}'
 		].join('\n')
 
-	_fragmentShader: ->
+	_defaultUniforms: ->
 		return [
 			'uniform vec2 iResolution;'
 			'uniform vec2 iMouse;'
 			'uniform float iGlobalTime;'
+		].join('\n')
+
+	_fragmentShader: ->
+		return [
+			@_defaultUniforms()
 
 			'float map(float value, float inMin, float inMax, float outMin, float outMax) {'
 				'return outMin + (outMax - outMin) * (value - inMin) / (inMax - inMin);'
@@ -169,8 +172,8 @@ class GlslPreviewView extends ScrollView
 			'void main() {'
 				'vec2 uv = gl_FragCoord.xy/iResolution.xy;'
 				'float aspect = iResolution.x / iResolution.y;'
-				'uv.x *= aspect;'
 				'vec3 color = vec3(uv.x,uv.y,0.0);'
+				'uv.x *= aspect;'
 				'vec2 mouse = vec2(iMouse.xy);'
 				'mouse.x *= aspect;'
 				'float radius = map(sin(iGlobalTime), -1.0, 1.0, 0.25, 0.5);'

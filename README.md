@@ -5,7 +5,7 @@ Live code fragment shaders in the atom editor by using
 
 File types supported: `.glsl` files.
 
-![glsl-preview](assets/screenshot.jpg)
+![glsl-preview](https://cdn.rawgit.com/davidpaulrosser/atom-glsl-preview/master/assets/screenshot.jpg)
 
 ## Uniforms
 
@@ -21,7 +21,7 @@ uniform float iGlobalTime;
 
 If the shader can't compile then the tab will subtly highlight in red.
 
-![glsl-preview-error](assets/error.jpg)
+![glsl-preview-error](https://cdn.rawgit.com/davidpaulrosser/atom-glsl-preview/master/assets/error.jpg)
 
 ## Credits
 

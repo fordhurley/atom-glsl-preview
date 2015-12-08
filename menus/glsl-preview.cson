@@ -10,6 +10,6 @@
 ]
 
 'context-menu':
-  '.atom-text-editor': [
-    {label: 'Preview shader', command: 'glsl-preview:preview'}
+  'atom-text-editor': [
+    {label: 'Preview shader', command: 'glsl-preview:toggle'}
   ]

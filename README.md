@@ -1,27 +1,30 @@
-# Markdown Preview package [![Build Status](https://travis-ci.org/atom/markdown-preview.svg?branch=master)](https://travis-ci.org/atom/markdown-preview)
+# GLSL Preview package
 
-Show the rendered HTML markdown to the right of the current editor using
-`ctrl-shift-m`.
+Live code fragment shaders in the atom editor by using
+`ctrl-shift-g`.
 
-It can be activated from the editor usin˜g the `ctrl-shift-m` key-binding and is
-currently enabled for `.markdown`, `.md`, `.mdown`, `.mkd`, `.mkdown`, `.ron`, and `.txt` files.
+File types supported: `.glsl` files.
 
-![markdown-preview](https://cloud.githubusercontent.com/assets/378023/10013086/24cad23e-6149-11e5-90e6-663009210218.png)
+![glsl-preview](assets/screenshot.jpg)
 
-## Customize
+## Uniforms
 
-By default Markdown Preview uses the colors of the active syntax theme. Enable
+List of default uniforms included. No need to add these into your fragment shaders.
 
-- [x] Use GitHub.com style
-
-in the __package settings__ to make it look closer to how markdown files get rendered on github.com.
-
-![markdown-preview GitHub style](https://cloud.githubusercontent.com/assets/378023/10013087/24ccc7ec-6149-11e5-97ea-53a842a715ea.png)
-
-To customize even further, the styling can be overridden in your `styles.less` file. For example:
-
-```css
-.markdown-preview.markdown-preview {
-  background-color: #444;
-}
 ```
+uniform vec2 iResolution;
+uniform vec2 iMouse;
+uniform float iGlobalTime;
+```
+
+## Shader errors
+
+If the shader can't compile then the tab will subtly highlight in red.
+
+![glsl-preview-error](assets/error.jpg)
+
+## Credits
+
+[Markdown Preview](https://github.com/atom/markdown-preview) for the boilerplate code.
+
+[three.js](http://threejs.org/) for simplifying WebGL.

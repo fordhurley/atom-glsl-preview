@@ -1,5 +1,5 @@
 path = require 'path'
-THREE = require '../three'
+THREE = require '../three.min'
 
 {Emitter, Disposable, CompositeDisposable, File} = require 'atom'
 {$, $$$, ScrollView} = require 'atom-space-pen-views'
@@ -82,8 +82,6 @@ class GlslPreviewView extends ScrollView
 			fragShader = @_defaultUniforms() + text
 		else
 			fragShader = @_fragmentShader()
-
-		console.log 'fragShader', fragShader
 
 		material = new THREE.ShaderMaterial( {
 			uniforms: @uniforms,

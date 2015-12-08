@@ -1,29 +1,7 @@
-.glsl-preview {
-  atom-text-editor {
-    // only show scrollbars on hover
-    .scrollbars-visible-always &::shadow {
-      .vertical-scrollbar,
-      .horizontal-scrollbar {
-        visibility: hidden;
-      }
-    }
-    .scrollbars-visible-always &:hover::shadow {
-      .vertical-scrollbar,
-      .horizontal-scrollbar {
-        visibility: visible;
-      }
-    }
-  }
-}
-
 .glsl-preview{
 	padding: 0 !important;
 	width: 100%;
 	height: 100%;
-
-	&.shader-compile-error{
-		opacity: 0.5;
-	}
 }
 
 // Set the pane title to red if there's a shader error

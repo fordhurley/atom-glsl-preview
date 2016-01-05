@@ -5,6 +5,7 @@ THREE = require '../three.min'
 {$, $$$, ScrollView} = require 'atom-space-pen-views'
 _ = require 'underscore-plus'
 fs = require 'fs-plus'
+StatusView = require './status-view'
 
 ###
 http://stackoverflow.com/questions/18663941/finding-closest-element-without-jquery
@@ -44,6 +45,10 @@ class GlslPreviewView extends ScrollView
 		@emitter = new Emitter
 		@disposables = new CompositeDisposable
 		@loaded = false
+
+		# Create the status view
+		@statusView = new StatusView()
+		@modalPanel = atom.workspace.addModalPanel(item: @statusView.getElement(), visible: false)
 
 		# Setup webgl
 		@renderer = new THREE.WebGLRenderer()
@@ -96,7 +101,7 @@ class GlslPreviewView extends ScrollView
 		setTimeout =>
 
 			if(@mesh2.material.program?.diagnostics? and !@mesh2.material.program.diagnostics.runnable)
-				@showError('Shader compile error')
+				@showError(@mesh2.material.program.diagnostics.fragmentShader.log)
 			else
 				@hideError()
 				@scene.remove( @mesh1 )
@@ -180,8 +185,8 @@ class GlslPreviewView extends ScrollView
 				'mouse.x *= aspect;'
 				'float radius = map(sin(iGlobalTime), -1.0, 1.0, 0.25, 0.3);'
 				'if(distance(uv.xy, mouse) < radius){'
-				 	'color.x = 1.0 - color.x;'
-				 	'color.y = 1.0 - color.y;'
+					'color.x = 1.0 - color.x;'
+					'color.y = 1.0 - color.y;'
 				'}'
 				'gl_FragColor=vec4(color,1.0);'
 			'}'
@@ -320,11 +325,20 @@ class GlslPreviewView extends ScrollView
 		# console.log '@editor?.getGrammar()', @editor?.getGrammar()
 		@editor?.getGrammar()
 
-	showError: (result) ->
+	showError: (error) ->
 		@_getActiveTab().addClass('shader-compile-error')
+
+		console.log 'error', error
+
+		if atom.config.get 'glsl-preview.showErrorMessage'
+			@modalPanel.show()
+			@statusView.update "[glsl-preview] <span class='error'>#{error}</span>"
 
 	hideError: (result) ->
 		@_getActiveTab().removeClass('shader-compile-error')
+
+		@modalPanel.hide()
+		@statusView.update ""
 
 	showLoading: ->
 		@loading = true

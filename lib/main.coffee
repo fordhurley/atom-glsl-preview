@@ -17,6 +17,10 @@ module.exports =
 			type: 'boolean'
 			default: true
 			description: 'Live reload the shader when the source changes, without requiring the source buffer to be saved. If disabled, the shader is re-loaded only when the buffer is saved to disk.'
+		showErrorMessage:
+			type: 'boolean'
+			default: false
+			description: 'Show the actual shader error within a popup.'
 		openPreviewInSplitPane:
 			type: 'boolean'
 			default: true

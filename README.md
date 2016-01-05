@@ -25,6 +25,14 @@ If the shader can't compile then the tab will subtly highlight in red.
 
 ![glsl-preview-error](https://cdn.rawgit.com/davidpaulrosser/atom-glsl-preview/master/assets/error.jpg)
 
+For easier error debugging enable the ```showErrorMessage``` flag in the options. This will show a modal with the line the error was caused on.
+
+![glsl-preview-error](https://cdn.rawgit.com/davidpaulrosser/atom-glsl-preview/master/assets/error-modal.jpg)
+
+## Frag snippet
+
+Create a new .glsl file and type frag and hit enter. This will output the base fragment shader code to get started from.
+
 ## Credits
 
 [Markdown Preview](https://github.com/atom/markdown-preview) for the boilerplate code.

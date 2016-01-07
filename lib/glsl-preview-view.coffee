@@ -218,6 +218,8 @@ class GlslPreviewView extends ScrollView
 
 		cancelAnimationFrame( @_update )
 
+		@modalPanel.destroy()
+
 		# remove listeners
 		@element.removeEventListener( 'mousemove', @_onMouseMove )
 		window.removeEventListener( 'resize', @_onResize )

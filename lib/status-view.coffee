@@ -7,8 +7,6 @@ module.exports = class StatusView
         @element = document.createElement('div')
         @element.classList.add('glsl-preview-status-view')
 
-    detach: ->
-
     update: (text) ->
         # Update the message
         @element.innerHTML = text

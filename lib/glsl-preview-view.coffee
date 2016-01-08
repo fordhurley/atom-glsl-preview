@@ -6,6 +6,7 @@ THREE = require '../three.min'
 _ = require 'underscore-plus'
 fs = require 'fs-plus'
 StatusView = require './status-view'
+BindingsView = require './bindings-view'
 
 ###
 http://stackoverflow.com/questions/18663941/finding-closest-element-without-jquery
@@ -50,6 +51,10 @@ class GlslPreviewView extends ScrollView
 		@statusView = new StatusView()
 		@modalPanel = atom.workspace.addModalPanel(item: @statusView.getElement(), visible: false)
 
+		@bindingsView = new BindingsView()
+		@bindingsView.on('removeTexture', @removeTexture)
+		@element.appendChild( @bindingsView.element )
+
 		# Setup webgl
 		@renderer = new THREE.WebGLRenderer()
 		@renderer.setPixelRatio( @_devicePixelRatio() )
@@ -75,23 +80,29 @@ class GlslPreviewView extends ScrollView
 		@mesh1 = null
 		@mesh2 = null
 
-		@renderShader()
+		# @renderShader()
 		@_update()
 
 		@element.addEventListener( 'mousemove', @_onMouseMove, false )
 		window.addEventListener( 'resize', @_onResize, false )
 
-	renderShader: ( text = null ) ->
+		# @addTexture( '/Users/DPR/github/glsl-preview/assets/texture.jpg' )
 
-		if text? and text.length > 0
-			fragShader = @_defaultUniforms() + text
+	renderShader: ( text = null, reload = false ) ->
+
+		# console.debug 'text', text, 'reload', reload
+
+		if text? and text.length > 0 and !reload
+			@fragShader = @_defaultUniforms() + text
 		else
-			fragShader = @_fragmentShader()
+			@fragShader = @_fragmentShader() if !reload
+
+		# console.log '@fragShader', @fragShader
 
 		material = new THREE.ShaderMaterial( {
 			uniforms: @uniforms,
 			vertexShader: @_vertexShader()
-			fragmentShader: fragShader
+			fragmentShader: @fragShader
 		} );
 
 		@mesh2 = new THREE.Mesh( new THREE.PlaneBufferGeometry( 2, 2 ), material )
@@ -220,6 +231,8 @@ class GlslPreviewView extends ScrollView
 
 		@modalPanel.destroy()
 
+		@bindingsView.destroy()
+
 		# remove listeners
 		@element.removeEventListener( 'mousemove', @_onMouseMove )
 		window.removeEventListener( 'resize', @_onResize )
@@ -330,7 +343,7 @@ class GlslPreviewView extends ScrollView
 	showError: (error) ->
 		@_getActiveTab().addClass('shader-compile-error')
 
-		console.log 'error', error
+		# console.log 'error', error
 
 		if atom.config.get 'glsl-preview.showErrorMessage'
 			@modalPanel.show()
@@ -344,3 +357,57 @@ class GlslPreviewView extends ScrollView
 
 	showLoading: ->
 		@loading = true
+
+	_getTextureId: ( filePath ) ->
+
+		textureId = filePath.split('/').pop()
+		textureId = textureId.split('.')[0]
+
+		return textureId
+
+	addTexture: ( filePath ) ->
+
+		# console.log 'addTexture', filePath
+
+		path = "file:///#{filePath}"
+
+		texture = new THREE.TextureLoader().load(
+			path
+			, =>
+				# console.log '[glsl-preview] texture loaded'
+				setTimeout =>
+					@renderShader( @fragShader, true )
+					@bindingsView.addTexture( path, @_getTextureId( filePath ) )
+				, 100
+			, ( error ) ->
+				console.warn '[glsl-preview] texture couldnt load'
+		)
+
+		textureId = @_getTextureId( filePath )
+
+		# console.log 'textureId', textureId
+
+		@uniforms[ textureId ] = {
+			type: "t"
+			value: texture
+		}
+
+	removeTexture: ( filePath ) =>
+
+		textureId = @_getTextureId( filePath )
+
+		return unless @uniforms[ textureId ]?
+
+		# console.log 'uniforms', @uniforms
+
+		@uniforms[ textureId ].value.dispose()
+
+		@uniforms[ textureId ].value.needsUpdate = true
+
+		@mesh2.material.needsUpdate = true
+
+		delete @uniforms[ textureId ]
+
+		# console.log 'uniforms', @uniforms
+
+		@renderShader( @fragShader, true )

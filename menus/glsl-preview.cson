@@ -11,5 +11,9 @@
 
 'context-menu':
   'atom-text-editor': [
-    {label: 'Preview shader', command: 'glsl-preview:toggle'}
+    {label: 'Glsl Preview: Preview shader', command: 'glsl-preview:toggle'}
+  ]
+  '.tree-view .file':[
+    {label: 'Glsl Preview: Add texture', command: 'glsl-preview:addTexture'}
+    {label: 'Glsl Preview: Remove texture', command: 'glsl-preview:removeTexture'}
   ]

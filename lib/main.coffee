@@ -92,7 +92,7 @@ module.exports =
 
 	addTexture: ->
 
-		console.log '@GlslPreviewView', @GlslPreviewView
+		# console.log '@GlslPreviewView', @GlslPreviewView
 
 		if @GlslPreviewView
 

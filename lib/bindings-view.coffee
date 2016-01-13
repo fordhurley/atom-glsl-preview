@@ -1,4 +1,5 @@
 happens = require 'happens'
+{$} = require 'atom-space-pen-views'
 
 module.exports = class BindingsView
 
@@ -35,7 +36,7 @@ module.exports = class BindingsView
 
     addTexture: ( file, textureId ) ->
 
-        console.log 'add'
+        # console.log 'add'
 
         li = document.createElement('li')
         li.setAttribute('data-file', file)
@@ -53,13 +54,17 @@ module.exports = class BindingsView
 
         li.addEventListener('click', @onTextureClick, false)
 
+    removeTexture: ( filePath ) ->
+
+        # console.log 'filePath', filePath
+
+        li = $('li[data-file="'+filePath+'"]')[0]
+
+        @list.removeChild( li ) if li
+
     onTextureClick: ( event ) =>
 
         filePath = event.currentTarget.getAttribute('data-file')
-
-        console.log 'filePath', filePath
-
-        @list.removeChild( event.currentTarget )
 
         @emit('removeTexture', filePath )
 

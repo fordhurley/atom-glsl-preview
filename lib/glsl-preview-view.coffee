@@ -365,11 +365,13 @@ class GlslPreviewView extends ScrollView
 
 		return textureId
 
+	_getFilePath: ( file ) -> "file:///#{file}"
+
 	addTexture: ( filePath ) ->
 
 		# console.log 'addTexture', filePath
 
-		path = "file:///#{filePath}"
+		path = @_getFilePath( filePath )
 
 		texture = new THREE.TextureLoader().load(
 			path
@@ -395,6 +397,11 @@ class GlslPreviewView extends ScrollView
 	removeTexture: ( filePath ) =>
 
 		textureId = @_getTextureId( filePath )
+
+		if filePath.indexOf('file:///') is -1
+			filePath = @_getFilePath( filePath )
+
+		@bindingsView.removeTexture( filePath )
 
 		return unless @uniforms[ textureId ]?
 

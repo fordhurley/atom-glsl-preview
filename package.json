@@ -3,7 +3,7 @@
   "version": "0.9.0",
   "main": "./lib/main",
   "description": "Live code fragment shaders in the current editor with `ctrl-shift-g`.",
-  "repository": "https://github.com/davidpaulrosser/atom-glsl-preview",
+  "repository": "https://github.com/amelierosser/atom-glsl-preview",
   "license": "MIT",
   "engines": {
     "atom": "*"

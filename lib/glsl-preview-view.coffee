@@ -359,7 +359,7 @@ class GlslPreviewView extends ScrollView
 		@loading = true
 
 	_getTextureId: ( filePath ) ->
-
+		filePath = filePath.replace(/\\/g, '/');
 		textureId = filePath.split('/').pop()
 		textureId = textureId.split('.')[0]
 
@@ -385,7 +385,8 @@ class GlslPreviewView extends ScrollView
 				console.warn '[glsl-preview] texture couldnt load'
 		)
 
-		textureId = @_getTextureId( filePath )
+		#textureId = @_getTextureId( filePath )
+		textureId = 'texture'
 
 		# console.log 'textureId', textureId
 
@@ -396,7 +397,8 @@ class GlslPreviewView extends ScrollView
 
 	removeTexture: ( filePath ) =>
 
-		textureId = @_getTextureId( filePath )
+		#textureId = @_getTextureId( filePath )
+		textureId ='texture'
 
 		if filePath.indexOf('file:///') is -1
 			filePath = @_getFilePath( filePath )

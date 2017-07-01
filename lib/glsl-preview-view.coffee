@@ -343,13 +343,14 @@ class GlslPreviewView extends ScrollView
 		# console.log 'error', error
 
 		if atom.config.get 'glsl-preview.showErrorMessage'
-			atom.notifications.addError(error)
+			@notification?.dismiss()
+			@notification = atom.notifications.addError(error, dismissable: true)
 			@statusView.update "[glsl-preview] <span class='error'>#{error}</span>"
 
 	hideError: (result) ->
 		@_getActiveTab().removeClass('shader-compile-error')
 
-		# TODO: remove notifications?
+		@notification?.dismiss()
 
 		@statusView.update ""
 

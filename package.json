@@ -1,6 +1,6 @@
 {
   "name": "glsl-preview",
-  "version": "0.11.0",
+  "version": "0.12.0",
   "main": "./lib/main",
   "description": "Live code fragment shaders in the current editor with `ctrl-shift-g`.",
   "repository": "https://github.com/amelierosser/atom-glsl-preview",

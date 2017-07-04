@@ -49,7 +49,7 @@ class GlslPreviewView extends ScrollView
 
 		# Create the status view
 		@statusView = new StatusView()
-		@modalPanel = atom.workspace.addModalPanel(item: @statusView.getElement(), visible: false)
+		@errorPanel = atom.workspace.addBottomPanel(item: @statusView, visible: false)
 
 		@bindingsView = new BindingsView()
 		@bindingsView.on('removeTexture', @removeTexture)
@@ -229,8 +229,6 @@ class GlslPreviewView extends ScrollView
 
 		cancelAnimationFrame( @_update )
 
-		@modalPanel.destroy()
-
 		@bindingsView.destroy()
 
 		# remove listeners
@@ -346,14 +344,14 @@ class GlslPreviewView extends ScrollView
 		# console.log 'error', error
 
 		if atom.config.get 'glsl-preview.showErrorMessage'
-			@modalPanel.show()
 			@statusView.update "[glsl-preview] <span class='error'>#{error}</span>"
+			@errorPanel.show()
 
 	hideError: (result) ->
 		@_getActiveTab().removeClass('shader-compile-error')
 
-		@modalPanel.hide()
 		@statusView.update ""
+		@errorPanel.hide()
 
 	showLoading: ->
 		@loading = true

@@ -1,5 +1,7 @@
 # GLSL Preview package
 
+# This project is no longer maintained and has been unpublished from the atom registry
+
 Live code fragment shaders in the atom editor by using
 `ctrl-shift-g`.
 

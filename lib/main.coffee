@@ -113,6 +113,8 @@ module.exports =
 		if atom.packages.isPackageLoaded('tree-view') == true
 			treeView = atom.packages.getLoadedPackage('tree-view')
 			treeView = require(treeView.mainModulePath)
+			if !treeView.serialize
+				treeView = treeView.getTreeViewInstance()
 			packageObj = treeView.serialize()
 		if typeof packageObj != 'undefined' && packageObj != null
 			if packageObj.selectedPath

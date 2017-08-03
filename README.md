@@ -19,6 +19,8 @@ uniform vec2 iMouse;
 uniform float iGlobalTime;
 ```
 
+The variants `u_resolution`, `u_mouse` and `u_time` can also be used to match the style found in [The Book of Shaders](http://thebookofshaders.com/).
+
 ## Shader errors
 
 If the shader can't compile then the tab will subtly highlight in red.

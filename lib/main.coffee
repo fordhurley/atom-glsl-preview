@@ -40,20 +40,12 @@ module.exports =
 				if state.editorId or fs.isFileSync(state.filePath)
 					createGlslPreviewView(state)
 
-		atom.commands.add 'atom-workspace',
-			'glsl-preview:toggle': =>
-				@toggle()
-
-		atom.commands.add 'atom-workspace',
-			'glsl-preview:addTexture': =>
-				@addTexture()
-
-		atom.commands.add 'atom-workspace',
-			'glsl-preview:removeTexture': =>
-				@removeTexture()
-
-		previewFile = @previewFile.bind(this)
-		atom.commands.add '.tree-view .file .name[data-name$=\\.glsl]', 'glsl-preview:preview-file', previewFile
+		# TODO: CompositeDisposable for these?
+		atom.commands.add 'atom-workspace', 'glsl-preview:toggle', @toggle.bind(this)
+		atom.commands.add 'atom-workspace', 'glsl-preview:addTexture', @addTexture.bind(this)
+		atom.commands.add 'atom-workspace', 'glsl-preview:removeTexture', @removeTexture.bind(this)
+		atom.commands.add '.tree-view .file', 'glsl-preview:addTextureTreeView', @addTextureTreeView.bind(this)
+		atom.commands.add '.tree-view .file .name[data-name$=\\.glsl]', 'glsl-preview:preview-file', @previewFile.bind(this)
 
 		atom.workspace.addOpener (uriToOpen) ->
 			try
@@ -76,7 +68,6 @@ module.exports =
 		@toggle()
 
 	toggle: ->
-
 		if isGlslPreviewView(atom.workspace.getActivePaneItem())
 			atom.workspace.destroyActivePaneItem()
 			return
@@ -91,37 +82,29 @@ module.exports =
 		@addPreviewForEditor(editor) unless @removePreviewForEditor(editor)
 
 	addTexture: ->
+		if !@GlslPreviewView?.IS_DESTROYED
+			@updateTexture(true)
 
-		# console.log '@GlslPreviewView', @GlslPreviewView
-
-		if @GlslPreviewView
-
-			if !@GlslPreviewView.IS_DESTROYED
-				@updateTexture( true )
+	addTextureTreeView: ({target}) ->
+		if !@GlslPreviewView?.IS_DESTROYED
+			@GlslPreviewView.addTexture(target.dataset.path)
 
 	removeTexture: ->
+		@updateTexture(false)
 
-		@updateTexture( false )
-
-	updateTexture: ( addTexture ) ->
-
-		###
-		https://github.com/magbicaleman/open-in-browser/blob/master/lib/open-in-browser.coffee
-		###
-
-		packageObj = null
-		if atom.packages.isPackageLoaded('tree-view') == true
-			treeView = atom.packages.getLoadedPackage('tree-view')
-			treeView = require(treeView.mainModulePath)
-			if !treeView.serialize
-				treeView = treeView.getTreeViewInstance()
-			packageObj = treeView.serialize()
-		if typeof packageObj != 'undefined' && packageObj != null
-			if packageObj.selectedPath
-				if addTexture
-					@GlslPreviewView.addTexture( packageObj.selectedPath )
-				else
-					@GlslPreviewView.removeTexture( packageObj.selectedPath )
+	updateTexture: (addTexture) ->
+		if !atom.packages.isPackageLoaded('tree-view')
+			return
+		treeView = atom.packages.getLoadedPackage('tree-view')
+		treeView = require(treeView.mainModulePath)
+		if !treeView.serialize
+			treeView = treeView.getTreeViewInstance()
+		packageObj = treeView.serialize()
+		if packageObj?.selectedPath
+			if addTexture
+				@GlslPreviewView?.addTexture( packageObj.selectedPath )
+			else
+				@GlslPreviewView?.removeTexture( packageObj.selectedPath )
 
 	uriForEditor: (editor) ->
 		"glsl-preview://editor/#{editor.id}"
@@ -148,7 +131,6 @@ module.exports =
 				previousActivePane.activate()
 
 	previewFile: ({target}) ->
-
 		filePath = target.dataset.path
 		return unless filePath
 

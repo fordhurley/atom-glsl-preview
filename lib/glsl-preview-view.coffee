@@ -409,6 +409,8 @@ class GlslPreviewView extends ScrollView
 		#textureId = @_getTextureId( filePath )
 		textureId ='texture'
 
+		# FIXME: this probably doesn't work on windows
+		# https://github.com/fordhurley/atom-glsl-preview/issues/12
 		if filePath.indexOf('file:///') is -1
 			filePath = @_getFilePath( filePath )
 

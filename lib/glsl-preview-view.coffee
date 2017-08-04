@@ -334,13 +334,10 @@ class GlslPreviewView extends ScrollView
       @editor.getPath()
 
   getGrammar: ->
-    # console.log '@editor?.getGrammar()', @editor?.getGrammar()
     @editor?.getGrammar()
 
   showError: (error) ->
     @_getActiveTab().addClass('shader-compile-error')
-
-    # console.log 'error', error
 
     if atom.config.get 'glsl-preview.showErrorMessage'
       @statusView.update "[glsl-preview] <span class='error'>#{error}</span>"

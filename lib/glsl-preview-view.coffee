@@ -127,6 +127,11 @@ class GlslPreviewView extends ScrollView
     width  = if paneWidth < 1 then 500 else paneWidth
     height = if paneHeight < 1 then 500 else paneHeight
 
+    maxSize = atom.config.get('glsl-preview.maxSize')
+    if maxSize > 0
+      width = Math.min(width, maxSize)
+      height = Math.min(height, maxSize)
+
     [width, height]
 
   _onResize: (event) =>

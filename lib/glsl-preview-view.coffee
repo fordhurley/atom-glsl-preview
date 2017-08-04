@@ -72,12 +72,12 @@ class GlslPreviewView extends ScrollView
     @clock = new THREE.Clock(true)
 
     @uniforms = {
-      iGlobalTime: { type: "f", value: 1.0 },
-      iResolution: { type: "v2", value: new THREE.Vector2() },
-      iMouse: { type: "v2", value: new THREE.Vector2() },
-      u_time: { type: "f", value: 1.0 },
-      u_resolution: { type: "v2", value: new THREE.Vector2() },
-      u_mouse: { type: "v2", value: new THREE.Vector2() },
+      iGlobalTime: {value: 0},
+      iResolution: {value: new THREE.Vector2()},
+      iMouse: {value: new THREE.Vector2()},
+      u_time: {value: 0},
+      u_resolution: {value: new THREE.Vector2()},
+      u_mouse: {value: new THREE.Vector2()},
     }
 
     @mesh1 = null
@@ -385,10 +385,7 @@ class GlslPreviewView extends ScrollView
 
     textureId = @_getTextureId(filePath)
 
-    @uniforms[textureId] = {
-      type: "t"
-      value: texture
-    }
+    @uniforms[textureId] = {value: texture}
 
   removeTexture: (filePath) =>
     textureId = @_getTextureId(filePath)

@@ -2,75 +2,62 @@ happens = require 'happens'
 {$} = require 'atom-space-pen-views'
 
 module.exports = class BindingsView
+  constructor: ->
+    happens @
 
-    constructor: ->
+    @isOpen = false
 
-        happens @
+    @element = document.createElement('div')
+    @element.classList.add('glsl-preview-bindings-view')
 
-        @isOpen = false
+    @toggleButton = document.createElement('button')
+    @toggleButton.innerHTML = 'Textures +'
 
-        @element = document.createElement('div')
-        @element.classList.add('glsl-preview-bindings-view')
+    @toggleButton.addEventListener('click', @onTextureButtonClicked, false)
 
-        @toggleButton = document.createElement('button')
-        @toggleButton.innerHTML = 'Textures +'
+    @list = document.createElement('ul')
+    @list.classList.add('hide')
+    @element.appendChild(@list)
+    @element.appendChild(@toggleButton)
 
-        @toggleButton.addEventListener('click', @onTextureButtonClicked, false)
+  onTextureButtonClicked: =>
+    cls  = if @isOpen then 'hide' else 'show'
+    symb = if @isOpen then '+' else '-'
 
-        @list = document.createElement('ul')
-        @list.classList.add('hide')
-        @element.appendChild(@list)
-        @element.appendChild(@toggleButton)
+    @list.classList.remove('hide', 'show')
+    @list.classList.add(cls)
 
-    onTextureButtonClicked: =>
+    @toggleButton.innerHTML = "Textures #{symb}"
 
-        cls  = if @isOpen then 'hide' else 'show'
-        symb = if @isOpen then '+' else '-'
+    @isOpen = !@isOpen
 
-        @list.classList.remove('hide', 'show')
-        @list.classList.add(cls)
+  addTexture: (file, textureId) ->
+    li = document.createElement('li')
+    li.setAttribute('data-file', file)
 
-        @toggleButton.innerHTML = "Textures #{symb}"
+    img = document.createElement('img')
+    img.setAttribute('src', file)
 
-        @isOpen = !@isOpen
+    li.appendChild(img)
 
-    addTexture: ( file, textureId ) ->
+    removeBtn = document.createElement('div')
+    removeBtn.innerHTML = 'X'
 
-        # console.log 'add'
+    li.appendChild(removeBtn)
+    @list.appendChild(li)
 
-        li = document.createElement('li')
-        li.setAttribute('data-file', file)
+    li.addEventListener('click', @onTextureClick, false)
 
-        img = document.createElement('img')
-        img.setAttribute('src', file)
+  removeTexture: (filePath) ->
+    li = $('li[data-file="'+filePath+'"]')[0]
+    @list.removeChild(li) if li
 
-        li.appendChild(img)
+  onTextureClick: (event) =>
+    filePath = event.currentTarget.getAttribute('data-file')
+    @emit('removeTexture', filePath)
 
-        removeBtn = document.createElement('div')
-        removeBtn.innerHTML = 'X'
+  destroy: ->
+    for li in @list.children
+      li.removeEventListener('click', @onTextureClick)
 
-        li.appendChild( removeBtn )
-        @list.appendChild( li )
-
-        li.addEventListener('click', @onTextureClick, false)
-
-    removeTexture: ( filePath ) ->
-
-        # console.log 'filePath', filePath
-
-        li = $('li[data-file="'+filePath+'"]')[0]
-
-        @list.removeChild( li ) if li
-
-    onTextureClick: ( event ) =>
-
-        filePath = event.currentTarget.getAttribute('data-file')
-
-        @emit('removeTexture', filePath )
-
-    destroy: ->
-
-        for li in @list.children
-            li.removeEventListener('click', @onTextureClick)
-
-        @element.innerHTML = ''
+    @element.innerHTML = ''

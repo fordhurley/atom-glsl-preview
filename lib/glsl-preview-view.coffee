@@ -284,6 +284,7 @@ class GlslPreviewView extends ScrollView
   handleEvents: ->
     @disposables.add atom.grammars.onDidAddGrammar => _.debounce((=> @renderView()), 250)
     @disposables.add atom.grammars.onDidUpdateGrammar _.debounce((=> @renderView()), 250)
+    @disposables.add atom.config.onDidChange 'glsl-preview.maxSize', @_onResize.bind(this)
 
     changeHandler = =>
       @renderView()

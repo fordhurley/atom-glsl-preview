@@ -75,6 +75,9 @@ class GlslPreviewView extends ScrollView
 			iGlobalTime: { type: "f", value: 1.0 },
 			iResolution: { type: "v2", value: new THREE.Vector2() },
 			iMouse: { type: "v2", value: new THREE.Vector2() }
+			u_time: { type: "f", value: 1.0 },
+			u_resolution: { type: "v2", value: new THREE.Vector2() },
+			u_mouse: { type: "v2", value: new THREE.Vector2() }
 		}
 
 		@mesh1 = null
@@ -143,6 +146,8 @@ class GlslPreviewView extends ScrollView
 
 		@uniforms.iResolution.value.x = width * ratio
 		@uniforms.iResolution.value.y = height * ratio
+		@uniforms.u_resolution.value.x = @uniforms.iResolution.value.x
+		@uniforms.u_resolution.value.y = @uniforms.iResolution.value.y
 
 		@renderer.setSize( width, height )
 
@@ -154,6 +159,8 @@ class GlslPreviewView extends ScrollView
 
 		@uniforms.iMouse.value.x = event.offsetX / width
 		@uniforms.iMouse.value.y = 1 - (event.offsetY / height)
+		@uniforms.u_mouse.value.x = @uniforms.iMouse.value.x
+		@uniforms.u_mouse.value.y = @uniforms.iMouse.value.y
 
 	_update: =>
 
@@ -162,6 +169,7 @@ class GlslPreviewView extends ScrollView
 		requestAnimationFrame( @_update )
 
 		@uniforms.iGlobalTime.value = @clock.getElapsedTime()
+		@uniforms.u_time.value = @uniforms.iGlobalTime.value
 
 		@renderer.render( @scene, @camera )
 
@@ -177,6 +185,9 @@ class GlslPreviewView extends ScrollView
 			'uniform vec2 iResolution;'
 			'uniform vec2 iMouse;'
 			'uniform float iGlobalTime;'
+			'uniform vec2 u_resolution;'
+			'uniform vec2 u_mouse;'
+			'uniform float u_time;'
 		].join('\n')
 
 	_fragmentShader: ->

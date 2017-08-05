@@ -28,7 +28,7 @@ module.exports =
     maxSize:
       type: 'number'
       default: 0
-      description: 'Maximum size for the preview (width and height). Set to 0 to fill the split pane.'
+      description: 'Maximum size for the preview (width and height). Leave blank to fill the split pane.'
     grammars:
       type: 'array'
       default: [

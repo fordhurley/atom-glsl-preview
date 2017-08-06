@@ -1,5 +1,4 @@
 happens = require 'happens'
-{$} = require 'atom-space-pen-views'
 
 module.exports = class BindingsView
   constructor: ->
@@ -49,7 +48,7 @@ module.exports = class BindingsView
     li.addEventListener('click', @onTextureClick, false)
 
   removeTexture: (filePath) ->
-    li = $('li[data-file="'+filePath+'"]')[0]
+    li = document.querySelector('li[data-file="'+filePath+'"]')
     @list.removeChild(li) if li
 
   onTextureClick: (event) =>

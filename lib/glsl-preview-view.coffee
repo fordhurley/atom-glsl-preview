@@ -33,6 +33,14 @@ closest = (el, selector) ->
     el = parent
   null
 
+parseLineNumberFromErrorMsg = (msg) ->
+  match = /ERROR: \d+:(\d+)/.exec(msg)
+  if match[1]
+    lineNumber = parseInt(match[1], 10)
+  if lineNumber?
+    prologueLines = 105 # lines added before the user's shader code, by us or by THREE
+    return lineNumber - prologueLines
+
 module.exports =
 class GlslPreviewView extends ScrollView
   @content: ->
@@ -108,7 +116,8 @@ class GlslPreviewView extends ScrollView
 
     setTimeout =>
       if(@mesh2.material.program?.diagnostics? and !@mesh2.material.program.diagnostics.runnable)
-        @showError(@mesh2.material.program.diagnostics.fragmentShader.log)
+        msg = @mesh2.material.program.diagnostics.fragmentShader.log
+        @showError(msg, parseLineNumberFromErrorMsg(msg))
       else
         @hideError()
         @scene.remove(@mesh1)
@@ -343,18 +352,25 @@ class GlslPreviewView extends ScrollView
   getGrammar: ->
     @editor?.getGrammar()
 
-  showError: (error) ->
+  showError: (error, lineNumber) ->
     @_getActiveTab().addClass('shader-compile-error')
 
     if atom.config.get 'glsl-preview.showErrorMessage'
       @statusView.update "[glsl-preview] <span class='error'>#{error}</span>"
       @errorPanel.show()
 
+    @marker?.destroy()
+    if lineNumber?
+      buffer = @editor.getBuffer()
+      @marker = buffer.markRange(buffer.rangeForRow(lineNumber - 1))
+      @editor.decorateMarker(@marker, type: "line-number", class: "glsl-preview-error")
+
   hideError: (result) ->
     @_getActiveTab().removeClass('shader-compile-error')
 
     @statusView.update ""
     @errorPanel.hide()
+    @marker?.destroy()
 
   showLoading: ->
     @loading = true

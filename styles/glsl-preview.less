@@ -18,6 +18,20 @@ atom-pane.glsl-preview-pane:not(.active) {
   color: red;
 }
 
+
+// Wavy underline, borrowed from the linter-ui-default package styles
+.glsl-preview-error {
+  @color: #ff0000;
+  background-image:
+    linear-gradient(45deg, transparent 65%, @color 80%, transparent 90%),
+    linear-gradient(135deg, transparent 5%, @color 15%, transparent 25%),
+    linear-gradient(135deg, transparent 45%, @color 55%, transparent 65%),
+    linear-gradient(45deg, transparent 25%, @color 35%, transparent 50%);
+  background-size: 8px 2px;
+  background-repeat: repeat-x;
+  background-position: left bottom;
+}
+
 .glsl-preview-bindings-view {
   position: absolute;
   bottom: 20px;

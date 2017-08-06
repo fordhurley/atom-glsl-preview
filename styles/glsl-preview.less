@@ -1,80 +1,79 @@
-.glsl-preview{
-	padding: 0 !important;
-	width: 100%;
-	height: 100%;
+.glsl-preview {
+  padding: 0 !important;
+  width: 100%;
+  height: 100%;
 }
 
 // Set the pane title to red if there's a shader error
-.tab.shader-compile-error .title{
-	color: red;
+.tab.shader-compile-error .title {
+  color: red;
 }
 
 // Keep preview 100% opacity all the time
-atom-pane.glsl-preview-pane:not(.active){
-	opacity: 1;
+atom-pane.glsl-preview-pane:not(.active) {
+  opacity: 1;
 }
 
-.glsl-preview-status-view .error{
-	color: red;
+.glsl-preview-status-view .error {
+  color: red;
 }
 
-.glsl-preview-bindings-view{
+.glsl-preview-bindings-view {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
 
-	position: absolute;
-	bottom: 20px;
-	left: 20px;
+  button {
+    background-color: rgba(0, 0, 0, 0.5);
+    border: none;
+    color: white;
+    padding: 10px;
+    text-align: left;
+    width: 80px;
 
-	button{
-		background-color: rgba(0, 0, 0, 0.5);
-		border: none;
-		color: white;
-		padding: 10px;
-		text-align: left;
-		width: 80px;
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.8);
+    }
+  }
 
-		&:hover{
-			background-color: rgba(0, 0, 0, 0.8);
-		}
-	}
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 20px 0;
 
-	ul {
-		list-style: none;
-		padding: 0;
-		margin: 0 0 20px 0;
+    li {
+      border: 1px solid rgba(0, 0, 0, 0.9);;
+      margin-right: 20px;
+      width: 80px;
+      height: 80px;
+      position: relative;
+      display: inline-block;
 
-		li{
-			border: 1px solid rgba(0, 0, 0, 0.9);;
-			margin-right: 20px;
-			width: 80px;
-			height: 80px;
-			position: relative;
-			display: inline-block;
+      img {
+        max-width: 100%;
+      }
 
-			img{
-				max-width: 100%;
-			}
+      div {
+        font-family: Arial;
+        background-color: rgba(0, 0, 0, 0.7);
+        top: 0;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        font-size: 30px;
+        display: flex;
+        align-items: center;
+        align-content: center;
+        justify-content: center;
+        opacity: 0;
+        cursor: pointer;
+      }
 
-			div{
-				font-family: Arial;
-				background-color: rgba(0, 0, 0, 0.7);
-				top: 0;
-				position: absolute;
-				width: 100%;
-				height: 100%;
-				font-size: 30px;
-				display: flex;
-				align-items: center;
-				align-content: center;
-				justify-content: center;
-				opacity: 0;
-				cursor: pointer;
-			}
-
-			&:hover{
-				div{
-					opacity: 1;
-				}
-			}
-		}
-	}
+      &:hover {
+        div {
+          opacity: 1;
+        }
+      }
+    }
+  }
 }

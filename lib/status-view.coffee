@@ -1,5 +1,3 @@
-{View} = require 'atom'
-
 module.exports = class StatusView
   constructor: ->
     @element = document.createElement('div')

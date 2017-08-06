@@ -25,6 +25,10 @@ module.exports =
       type: 'boolean'
       default: true
       description: 'Open the preview in a split pane. If disabled, the preview is opened in a new tab in the same pane.'
+    maxSize:
+      type: 'number'
+      default: 0
+      description: 'Maximum size for the preview (width and height). Leave blank to fill the split pane.'
     grammars:
       type: 'array'
       default: [

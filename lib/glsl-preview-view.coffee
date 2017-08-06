@@ -3,7 +3,7 @@ THREE = require '../three.min'
 
 {Emitter, Disposable, CompositeDisposable, File} = require 'atom'
 {$, $$$, ScrollView} = require 'atom-space-pen-views'
-_ = require 'underscore-plus'
+{debounce} = require 'underscore-plus'
 fs = require 'fs-plus'
 StatusView = require './status-view'
 BindingsView = require './bindings-view'
@@ -282,9 +282,10 @@ class GlslPreviewView extends ScrollView
     null
 
   handleEvents: ->
-    @disposables.add atom.grammars.onDidAddGrammar => _.debounce((=> @renderView()), 250)
-    @disposables.add atom.grammars.onDidUpdateGrammar _.debounce((=> @renderView()), 250)
-    @disposables.add atom.config.onDidChange 'glsl-preview.maxSize', @_onResize.bind(this)
+    debouncedRender = debounce(@renderView.bind(this), 250)
+    @disposables.add atom.grammars.onDidAddGrammar(debouncedRender)
+    @disposables.add atom.grammars.onDidUpdateGrammar(debouncedRender)
+    @disposables.add atom.config.onDidChange('glsl-preview.maxSize', @_onResize.bind(this))
 
     changeHandler = =>
       @renderView()

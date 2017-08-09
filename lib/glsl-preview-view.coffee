@@ -88,8 +88,8 @@ class GlslPreviewView extends ScrollView
       u_mouse: {value: new THREE.Vector2()},
     }
 
-    @mesh1 = null
-    @mesh2 = null
+    @mesh = null
+    @geometry = new THREE.PlaneBufferGeometry(2, 2);
 
     @_update()
 
@@ -98,30 +98,29 @@ class GlslPreviewView extends ScrollView
     # FIXME: this is only fired for resizing the whole window, not just the panel
     window.addEventListener('resize', @_onResize, false)
 
-  renderShader: (text = null, reload = false) ->
-    if text? and text.length > 0 and !reload
-      @fragShader = @_defaultUniforms() + text
-    else
-      @fragShader = @_fragmentShader() if !reload
-
+  swapMesh: () ->
     material = new THREE.ShaderMaterial({
       uniforms: @uniforms,
       vertexShader: @_vertexShader()
       fragmentShader: @fragShader,
     });
 
-    @mesh2 = new THREE.Mesh(new THREE.PlaneBufferGeometry(2, 2), material)
+    tmpMesh = new THREE.Mesh(@geometry, material)
 
-    @scene.add(@mesh2)
+    @scene.add(tmpMesh)
 
     setTimeout =>
-      if(@mesh2.material.program?.diagnostics? and !@mesh2.material.program.diagnostics.runnable)
-        msg = @mesh2.material.program.diagnostics.fragmentShader.log
+      diagnostics = tmpMesh.material.program?.diagnostics
+      if (diagnostics? and !diagnostics.runnable)
+        msg = diagnostics.fragmentShader.log
         @showError(msg, parseLineNumberFromErrorMsg(msg))
+        tmpMesh.material.dispose()
+        @scene.remove(tmpMesh)
       else
         @hideError()
-        @scene.remove(@mesh1)
-        @mesh1 = @mesh2
+        @mesh?.material.dispose()
+        @scene.remove(@mesh)
+        @mesh = tmpMesh
     , 100
 
   _getActiveTab: () ->
@@ -190,30 +189,6 @@ class GlslPreviewView extends ScrollView
       'uniform vec2 u_resolution;'
       'uniform vec2 u_mouse;'
       'uniform float u_time;'
-    ].join('\n')
-
-  _fragmentShader: ->
-    return [
-      @_defaultUniforms()
-
-      'float map(float value, float inMin, float inMax, float outMin, float outMax) {'
-        'return outMin + (outMax - outMin) * (value - inMin) / (inMax - inMin);'
-      '}'
-
-      'void main() {'
-        'vec2 uv = gl_FragCoord.xy/iResolution.xy;'
-        'float aspect = iResolution.x / iResolution.y;'
-        'vec3 color = vec3(uv.x,uv.y,0.0);'
-        'uv.x *= aspect;'
-        'vec2 mouse = vec2(iMouse.xy);'
-        'mouse.x *= aspect;'
-        'float radius = map(sin(iGlobalTime), -1.0, 1.0, 0.25, 0.3);'
-        'if(distance(uv.xy, mouse) < radius){'
-          'color.x = 1.0 - color.x;'
-          'color.y = 1.0 - color.y;'
-        '}'
-        'gl_FragColor=vec4(color,1.0);'
-      '}'
     ].join('\n')
 
   attached: ->
@@ -319,7 +294,10 @@ class GlslPreviewView extends ScrollView
   renderView: ->
     @_onResize()
     @showLoading() unless @loaded
-    @getShaderSource().then (source) => @renderShader(source) if source?
+    @getShaderSource().then (source) =>
+      if source? and source.length > 0
+        @fragShader = @_defaultUniforms() + source
+      @swapMesh()
 
   getShaderSource: ->
     if @file?.getPath()
@@ -391,19 +369,18 @@ class GlslPreviewView extends ScrollView
 
   addTexture: (filePath) ->
     path = @_getFilePath(filePath)
+    textureId = @_getTextureId(filePath)
 
     texture = new THREE.TextureLoader().load(
       path
       , =>
         setTimeout =>
-          @renderShader(@fragShader, true)
-          @bindingsView.addTexture(path, @_getTextureId(filePath))
+          @swapMesh()
+          @bindingsView.addTexture(path, textureId)
         , 100
       , (error) ->
         console.warn '[glsl-preview] texture couldnt load'
     )
-
-    textureId = @_getTextureId(filePath)
 
     @uniforms[textureId] = {value: texture}
 
@@ -420,11 +397,10 @@ class GlslPreviewView extends ScrollView
     return unless @uniforms[textureId]?
 
     @uniforms[textureId].value.dispose()
-
     @uniforms[textureId].value.needsUpdate = true
-
-    @mesh2.material.needsUpdate = true
 
     delete @uniforms[textureId]
 
-    @renderShader(@fragShader, true)
+    @mesh.material.needsUpdate = true
+
+    @swapMesh()

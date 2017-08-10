@@ -13,5 +13,12 @@
     "fs-plus": "^2.0.0",
     "happens": "^0.6.0",
     "underscore-plus": "^1.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^4.4.1",
+    "eslint-config-airbnb": "^15.1.0",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-jsx-a11y": "^5.1.1",
+    "eslint-plugin-react": "^7.2.0"
   }
 }

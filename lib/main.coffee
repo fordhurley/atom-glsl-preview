@@ -48,6 +48,7 @@ module.exports =
     atom.commands.add 'atom-workspace', 'glsl-preview:toggle', @toggle.bind(this)
     atom.commands.add 'atom-workspace', 'glsl-preview:addTexture', @addTexture.bind(this)
     atom.commands.add 'atom-workspace', 'glsl-preview:removeTexture', @removeTexture.bind(this)
+    atom.commands.add 'atom-workspace', 'glsl-preview:toggleTextureButton', @toggleTextureButton.bind(this)
     atom.commands.add '.tree-view .file', 'glsl-preview:addTextureTreeView', @addTextureTreeView.bind(this)
     atom.commands.add '.tree-view .file .name[data-name$=\\.glsl]', 'glsl-preview:preview-file', @previewFile.bind(this)
 
@@ -142,3 +143,13 @@ module.exports =
       return
 
     atom.workspace.open "glsl-preview://#{encodeURI(filePath)}", searchAllPanes: true
+
+
+  toggleTextureButton: ->
+    toggleButton = document.getElementById('glslToggleButton')
+    if toggleButton?
+      currentDisplay = toggleButton.style.display
+      if currentDisplay == 'none'
+        toggleButton.style.display = ''
+      else
+        toggleButton.style.display = 'none'

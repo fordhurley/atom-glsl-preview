@@ -16,4 +16,5 @@
   '.tree-view .file':[
     {label: 'Glsl Preview: Add texture', command: 'glsl-preview:addTextureTreeView'}
     {label: 'Glsl Preview: Remove texture', command: 'glsl-preview:removeTexture'}
+    {label: 'Glsl Preview: Toggle texture button', command: 'glsl-preview:toggleTextureButton'}
   ]

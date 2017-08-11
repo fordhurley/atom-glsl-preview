@@ -11,6 +11,7 @@ module.exports = class BindingsView
 
     @toggleButton = document.createElement('button')
     @toggleButton.innerHTML = 'Textures +'
+    @toggleButton.id = 'glslToggleButton'
 
     @toggleButton.addEventListener('click', @onTextureButtonClicked, false)
 

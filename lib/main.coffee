@@ -132,6 +132,7 @@ module.exports =
     atom.workspace.open(uri, options).then (@GlslPreviewView) =>
       if isGlslPreviewView(@GlslPreviewView)
         previousActivePane.activate()
+        @GlslPreviewView.attached()
 
   previewFile: ({target}) ->
     filePath = target.dataset.path

@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "happens": "^0.6.0",
+    "three": "^0.86.0",
     "underscore": "^1.8.3"
   },
   "devDependencies": {

@@ -44,6 +44,24 @@ Create a new .glsl file and type `frag` and hit enter. This will output the base
 fragment shader code to get started from.
 
 
+## Textures
+
+Textures can be loaded by defining a uniform with a comment containing the path
+to the file. The syntax is:
+
+```glsl
+uniform sampler2D <texture_name>; // <path_to_file>
+```
+
+For example:
+
+```glsl
+uniform sampler2D inThisDirectory; // foo.jpg
+uniform sampler2D inOtherDirectory; // ../other_textures/bar.png
+uniform sampler2D withAbsolutePath; // /Users/ford/textures/blah.bmp
+```
+
+
 ## Credits
 
 [Markdown Preview](https://github.com/atom/markdown-preview) for the boilerplate

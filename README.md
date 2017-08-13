@@ -41,20 +41,6 @@ This will show a panel with the error message from the shader compiler.
 Create a new .glsl file and type `frag` and hit enter. This will output the base
 fragment shader code to get started from.
 
-## Adding textures
-
-You can add textures to your fragment shader by right-clicking on the file in
-the sidebar:
-
-![sidebar texture](https://cdn.rawgit.com/fordhurley/atom-glsl-preview/master/assets/sidebar-texture.jpg)
-
-The uniform name will be `uniform sampler2D texture;` (support for multiple
-textures is coming).
-
-You can remove textures by either right-clicking in the sidebar and selecting
-`Glsl Preview: Remove texture` or by clicking the texture square in the preview
-pane.
-
 ## Credits
 
 [Markdown Preview](https://github.com/atom/markdown-preview) for the boilerplate

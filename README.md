@@ -9,12 +9,13 @@ for syntax highlighting.
 
 ![screenshot](https://cdn.rawgit.com/fordhurley/atom-glsl-preview/master/assets/screenshot.jpg)
 
+
 ## Uniforms
 
 List of default uniforms included. No need to add these into your fragment
 shaders.
 
-```
+```glsl
 uniform vec2 iResolution;
 uniform vec2 iMouse;
 uniform float iGlobalTime;
@@ -23,23 +24,25 @@ uniform float iGlobalTime;
 The variants `u_resolution`, `u_mouse` and `u_time` can also be used to match
 the style found in [The Book of Shaders](http://thebookofshaders.com/).
 
+
 ## Shader errors
 
-If the shader can't compile then the tab and line number will subtly highlight in red.
+If the shader can't compile, the tab and line number will subtly highlight in red.
 
-![error](https://cdn.rawgit.com/fordhurley/atom-glsl-preview/master/assets/error.jpg)
+<img width="175" alt="error" src="https://cdn.rawgit.com/fordhurley/atom-glsl-preview/master/assets/error.jpg">
 
-![error line](https://cdn.rawgit.com/fordhurley/atom-glsl-preview/master/assets/error-line.png)
+<img width="375" alt="error line" src="https://cdn.rawgit.com/fordhurley/atom-glsl-preview/master/assets/error-line.png">
 
-For easier error debugging enable the `showErrorMessage` flag in the options.
-This will show a panel with the error message from the shader compiler.
+If enabled in the package settings, a notification will show the error message:
 
-![error panel](https://cdn.rawgit.com/fordhurley/atom-glsl-preview/master/assets/error-panel.png)
+<img width="461" alt="error notification" src="https://cdn.rawgit.com/fordhurley/atom-glsl-preview/master/assets/error-notification.png">
+
 
 ## Frag snippet
 
 Create a new .glsl file and type `frag` and hit enter. This will output the base
 fragment shader code to get started from.
+
 
 ## Credits
 

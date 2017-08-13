@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "happens": "^0.6.0",
-    "underscore-plus": "^1.0.0"
+    "underscore": "^1.8.3"
   },
   "devDependencies": {
     "eslint": "^4.4.1",

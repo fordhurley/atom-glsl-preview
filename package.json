@@ -9,8 +9,6 @@
     "atom": "*"
   },
   "dependencies": {
-    "atom-space-pen-views": "^2.0.0",
-    "fs-plus": "^2.0.0",
     "happens": "^0.6.0",
     "underscore-plus": "^1.0.0"
   },

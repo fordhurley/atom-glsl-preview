@@ -1,47 +1,26 @@
 # GLSL Preview package
 
-Live code fragment shaders in the atom editor by using `ctrl-shift-g`.
+Live preview fragment shaders in the Atom editor, with `ctrl-shift-G`.
 
-File types supported: `.glsl` files.
+<img width="800" alt="screenshot" src="https://cdn.rawgit.com/fordhurley/atom-glsl-preview/master/assets/screenshot.jpg">
 
-Make sure you install [language-glsl](https://github.com/hughsk/language-glsl)
+Make sure you install [language-glsl](https://atom.io/packages/language-glsl)
 for syntax highlighting.
-
-![screenshot](https://cdn.rawgit.com/fordhurley/atom-glsl-preview/master/assets/screenshot.jpg)
 
 
 ## Uniforms
 
-List of default uniforms included. No need to add these into your fragment
-shaders.
+The following default uniforms are included. No need to add these into your
+fragment shaders:
 
 ```glsl
-uniform vec2 iResolution;
-uniform vec2 iMouse;
-uniform float iGlobalTime;
+uniform vec2 iResolution; // size of the preview
+uniform vec2 iMouse; // cursor in normalized coordinates [0, 1)
+uniform float iGlobalTime; // clock in seconds
 ```
 
 The variants `u_resolution`, `u_mouse` and `u_time` can also be used to match
 the style found in [The Book of Shaders](http://thebookofshaders.com/).
-
-
-## Shader errors
-
-If the shader can't compile, the tab and line number will subtly highlight in red.
-
-<img width="175" alt="error" src="https://cdn.rawgit.com/fordhurley/atom-glsl-preview/master/assets/error.jpg">
-
-<img width="375" alt="error line" src="https://cdn.rawgit.com/fordhurley/atom-glsl-preview/master/assets/error-line.png">
-
-If enabled in the package settings, a notification will show the error message:
-
-<img width="461" alt="error notification" src="https://cdn.rawgit.com/fordhurley/atom-glsl-preview/master/assets/error-notification.png">
-
-
-## Frag snippet
-
-Create a new .glsl file and type `frag` and hit enter. This will output the base
-fragment shader code to get started from.
 
 
 ## Textures
@@ -60,6 +39,31 @@ uniform sampler2D inThisDirectory; // foo.jpg
 uniform sampler2D inOtherDirectory; // ../other_textures/bar.png
 uniform sampler2D withAbsolutePath; // /Users/ford/textures/blah.bmp
 ```
+
+
+## Shader errors
+
+If the shader fails to compile, the tab and line number will subtly highlight in
+red.
+
+<img width="264" alt="error" src="https://cdn.rawgit.com/fordhurley/atom-glsl-preview/master/assets/error.png">
+
+<img width="375" alt="error line" src="https://cdn.rawgit.com/fordhurley/atom-glsl-preview/master/assets/error-line.png">
+
+If enabled in the package settings, a notification will show the error message:
+
+<img width="461" alt="error notification" src="https://cdn.rawgit.com/fordhurley/atom-glsl-preview/master/assets/error-notification.png">
+
+
+## Frag snippet
+
+Create a new .glsl file, type `frag`, and hit enter. This will output the base
+fragment shader code to get started from.
+
+
+## Examples
+
+Example shaders can be found in the `examples/` directory.
 
 
 ## Credits

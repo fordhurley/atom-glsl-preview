@@ -1,4 +1,4 @@
-# Unreleased
+# v1.0.0
 
 - Load textures by specifying file path in comments.
 - Removed texture loading via commands or menus.

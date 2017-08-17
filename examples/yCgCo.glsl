@@ -10,8 +10,7 @@ Drag your mouse to see the different representations
    |                  |
   RGB ------------luminance
 */
-void main()
-{
+void main() {
   // A matrix that transforms rgb color to yCgCo
   mat3 rgb2YCgCo = mat3(0.25, -0.25, 0.5, 0.5, 0.5, 0.0, 0.25, -0.25, -0.5);
   // The inverse

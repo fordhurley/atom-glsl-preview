@@ -1,4 +1,4 @@
-uniform sampler2D u_mainTex; // grace_hopper.jpg
+uniform sampler2D u_mainTex; // ../assets/grace_hopper.jpg
 
 void main()
 {

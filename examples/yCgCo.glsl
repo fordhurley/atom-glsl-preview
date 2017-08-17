@@ -1,4 +1,4 @@
-uniform sampler2D u_mainTex; // barns_grand_tetons.jpg
+uniform sampler2D u_mainTex; // ../assets/barns_grand_tetons.jpg
 
 /*
 https://en.wikipedia.org/wiki/YCoCg
@@ -28,7 +28,7 @@ void main()
   vec3 Cg = yCgCo2rgb * vec3(0.0, yCgCo.g, 0.0) + vec3(0.5);
   vec3 Co = yCgCo2rgb * vec3(0.0, 0.0, yCgCo.b) + vec3(0.5);
 
-  vec2 mouseControl = clamp(3.0 * u_mouse - 1.0, 0.0, 1.0);
+  vec2 mouseControl = clamp(3.0 * iMouse - 1.0, 0.0, 1.0);
   vec3 outputColor = mix(
       mix(tex, luminance, mouseControl.x),
       mix(Co, Cg, mouseControl.x),

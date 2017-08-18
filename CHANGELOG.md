@@ -1,3 +1,7 @@
+# Unreleased
+
+- Fixed preview tab titles updating.
+
 # v1.0.0
 
 - Load textures by specifying file path in comments.

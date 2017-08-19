@@ -11,5 +11,7 @@ module.exports = {
     "quotes": ["error", "double"],
     "no-plusplus": ["error", {"allowForLoopAfterthoughts": true}],
     "no-underscore-dangle": ["error", {"allowAfterThis": true}],
+    "import/no-unresolved": ["error", {"ignore": ["atom", "electron"] }],
+    "import/no-extraneous-dependencies": ["off"],
   },
 };

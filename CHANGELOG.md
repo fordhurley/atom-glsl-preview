@@ -1,4 +1,4 @@
-# Unreleased
+# v1.1.0
 
 - Added commands to copy and save still images of previews.
 - Fixed preview tab titles updating.

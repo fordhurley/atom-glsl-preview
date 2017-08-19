@@ -3,8 +3,15 @@
   'submenu': [
     'label': 'GLSL Preview'
     'submenu': [
-      'label': 'Preview shader'
-      'command': 'glsl-preview:toggle'
+      {label: 'Preview Shader', command: 'glsl-preview:toggle'}
+      {label: 'Copy Image', command: 'glsl-preview:copy-image'}
+      {label: 'Save Image', command: 'glsl-preview:save-image'}
     ]
   ]
 ]
+
+'context-menu':
+  '.glsl-preview': [
+    {label: 'Copy Image', command: 'glsl-preview:copy-image'}
+    {label: 'Save Image', command: 'glsl-preview:save-image'}
+  ]

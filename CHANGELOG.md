@@ -1,5 +1,6 @@
 # Unreleased
 
+- Added commands to copy and save still images of previews.
 - Fixed preview tab titles updating.
 
 # v1.0.0
@@ -12,10 +13,10 @@
 
 # v0.16.0
 
-- Add Book of Shaders style uniforms as aliases. (@mysteryDate)
-- Add max size config to limit the size of the preview.
+- Added Book of Shaders style uniforms as aliases. (@mysteryDate)
+- Added max size config to limit the size of the preview.
 - Highlight the line with the error.
 
 # v0.15.0
 
-- Fix treeView.serialize error.
+- Fixed treeView.serialize error.

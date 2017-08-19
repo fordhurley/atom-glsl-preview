@@ -1,31 +1,30 @@
+@errorColor: red;
+
 .glsl-preview {
-  padding: 0 !important;
+  padding: 0;
   width: 100%;
   height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 // Set the pane title to red if there's a shader error
 .tab.shader-compile-error .title {
-  color: red;
-}
-
-// Keep preview 100% opacity all the time
-atom-pane.glsl-preview-pane:not(.active) {
-  opacity: 1;
+  color: @errorColor;
 }
 
 .glsl-preview-status-view .error {
-  color: red;
+  color: @errorColor;
 }
 
 // Wavy underline, borrowed from the linter-ui-default package styles
 .glsl-preview-error {
-  @color: #ff0000;
   background-image:
-    linear-gradient(45deg, transparent 65%, @color 80%, transparent 90%),
-    linear-gradient(135deg, transparent 5%, @color 15%, transparent 25%),
-    linear-gradient(135deg, transparent 45%, @color 55%, transparent 65%),
-    linear-gradient(45deg, transparent 25%, @color 35%, transparent 50%);
+    linear-gradient(45deg, transparent 65%, @errorColor 80%, transparent 90%),
+    linear-gradient(135deg, transparent 5%, @errorColor 15%, transparent 25%),
+    linear-gradient(135deg, transparent 45%, @errorColor 55%, transparent 65%),
+    linear-gradient(45deg, transparent 25%, @errorColor 35%, transparent 50%);
   background-size: 8px 2px;
   background-repeat: repeat-x;
   background-position: left bottom;

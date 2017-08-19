@@ -8,3 +8,8 @@
     ]
   ]
 ]
+
+'context-menu':
+  '.glsl-preview': [
+    {label: 'Copy Image', command: 'glsl-preview:copy-image'}
+  ]

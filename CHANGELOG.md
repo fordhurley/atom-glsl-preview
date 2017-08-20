@@ -1,3 +1,9 @@
+# Unreleased
+
+- Close the preview when the editor closes.
+- Center the preview canvas.
+- Simpler line number error indicator.
+
 # v1.1.0
 
 - Added commands to copy and save still images of previews.

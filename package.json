@@ -3,7 +3,11 @@
   "version": "1.1.0",
   "main": "./lib/main",
   "description": "Live preview fragment shaders in the current editor with `ctrl-shift-G`.",
-  "keywords": ["glsl", "shaders", "webgl"],
+  "keywords": [
+    "glsl",
+    "shaders",
+    "webgl"
+  ],
   "repository": "https://github.com/fordhurley/atom-glsl-preview",
   "license": "MIT",
   "engines": {
@@ -11,6 +15,7 @@
   },
   "dependencies": {
     "happens": "^0.6.0",
+    "interactjs": "^1.2.9",
     "three": "^0.86.0",
     "underscore": "^1.8.3"
   },

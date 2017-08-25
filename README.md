@@ -55,15 +55,22 @@ If enabled in the package settings, a notification will show the error message:
 <img width="461" alt="error notification" src="https://cdn.rawgit.com/fordhurley/atom-glsl-preview/master/assets/error-notification.png">
 
 
-## Frag snippet
+## Capture images
 
-Create a new .glsl file, type `frag`, and hit enter. This will output the base
-fragment shader code to get started from.
+Right click on the preview to copy or save a still image of the shader. This can
+also be done by running the command "Glsl Preview: Copy Image" or
+"Glsl Preview: Save Image" from the command palette (`cmd-shift-P`).
 
 
 ## Examples
 
 Example shaders can be found in the `examples/` directory.
+
+
+## Frag snippet
+
+Create a new .glsl file, type `frag`, and hit enter. This will output the base
+fragment shader code to get started from.
 
 
 ## Credits

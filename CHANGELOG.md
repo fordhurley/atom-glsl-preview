@@ -2,6 +2,7 @@
 
 - Close the preview when the editor closes.
 - Center the preview canvas.
+- Resize the canvas by dragging the edges.
 - Simpler line number error indicator.
 
 # v1.1.0

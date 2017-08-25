@@ -13,5 +13,6 @@ module.exports = {
     "no-underscore-dangle": ["error", {"allowAfterThis": true}],
     "import/no-unresolved": ["error", {"ignore": ["atom", "electron"] }],
     "import/no-extraneous-dependencies": ["off"],
+    "object-curly-spacing": ["error", "never"],
   },
 };

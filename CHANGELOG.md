@@ -1,4 +1,4 @@
-# Unreleased
+# v1.2.0
 
 - Close the preview when the editor closes.
 - Center the preview canvas.

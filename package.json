@@ -14,7 +14,6 @@
     "atom": "*"
   },
   "dependencies": {
-    "happens": "^0.6.0",
     "interactjs": "^1.2.9",
     "three": "^0.86.0",
     "underscore": "^1.8.3"

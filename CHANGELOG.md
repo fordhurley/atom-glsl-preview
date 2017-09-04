@@ -1,3 +1,7 @@
+# Unreleased
+
+- Optimize activation time.
+
 # v1.2.1
 
 - Fixed an exception when shader error doesn't contain a line number.

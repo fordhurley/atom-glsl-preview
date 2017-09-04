@@ -1,3 +1,7 @@
+# v1.2.1
+
+- Fixed an exception when shader error doesn't contain a line number.
+
 # v1.2.0
 
 - Close the preview when the editor closes.

@@ -1,4 +1,4 @@
-# Unreleased
+# v1.2.2
 
 - Optimize activation time.
 - Extracted [shader-canvas](https://github.com/fordhurley/shader-canvas).

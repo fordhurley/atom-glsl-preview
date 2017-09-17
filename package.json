@@ -14,8 +14,9 @@
     "atom": "*"
   },
   "dependencies": {
+    "ffmpeg-stream": "^0.5.0",
     "interactjs": "^1.2.9",
-    "shader-canvas": "^0.2.3",
+    "shader-canvas": "file:../shader-canvas",
     "underscore": "^1.8.3"
   },
   "devDependencies": {

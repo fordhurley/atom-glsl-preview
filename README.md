@@ -67,6 +67,19 @@ also be done by running the command "Glsl Preview: Copy Image" or
 Example shaders can be found in the `examples/` directory.
 
 
+## glslify
+
+Supports [glslify](https://github.com/glslify/glslify) for importing glsl
+modules.
+
+```glsl
+// Import from local file:
+#pragma glslify: map = require('./map')
+
+// Import from npm installed module:
+#pragma glslify: rainbow = require('glsl-colormap/rainbow')
+```
+
 ## Frag snippet
 
 Create a new .glsl file, type `frag`, and hit enter. This will output the base

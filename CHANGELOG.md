@@ -1,3 +1,7 @@
+# v1.2.3
+
+- Fixed an event listener leak in shader-canvas.
+
 # v1.2.2
 
 - Optimize activation time.

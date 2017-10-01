@@ -1,3 +1,7 @@
+# v1.3.0
+
+- Add glslify support.
+
 # v1.2.3
 
 - Fixed an event listener leak in shader-canvas.

@@ -7,6 +7,24 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
+}
+
+.glsl-preview .progress-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 6px;
+  font-size: 0;
+  text-align: left;
+
+  span {
+    display: inline-block;
+    height: 100%;
+    background-color: steelblue;
+  }
 }
 
 // Set the pane title to red if there's a shader error

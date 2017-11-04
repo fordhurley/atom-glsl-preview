@@ -1,4 +1,4 @@
-@errorColor: red;
+@import "ui-variables";
 
 .glsl-preview {
   padding: 0;
@@ -10,32 +10,46 @@
   position: relative;
 }
 
-.glsl-preview .progress-bar {
+.glsl-preview .status-overlay {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   width: 100%;
-  height: 6px;
-  font-size: 0;
-  text-align: left;
 
-  span {
-    display: inline-block;
-    height: 100%;
-    background-color: steelblue;
+  @shadow-radius: 10px;
+  @shadow-color: fade(@base-background-color, 50%);
+  filter: drop-shadow(0 0 @shadow-radius @shadow-color);
+
+  .progress-bar {
+    height: 6px;
+    font-size: 0;
+    text-align: left;
+
+    span {
+      display: inline-block;
+      height: 100%;
+      background-color: steelblue;
+    }
+  }
+
+  .message {
+    text-align: left;
+    user-select: none;
+    cursor: default;
+    padding-left: 0.2em;
   }
 }
 
 // Set the pane title to red if there's a shader error
 .tab.shader-compile-error .title {
-  color: @errorColor;
+  color: @text-color-error;
 }
 
 .glsl-preview-status-view .error {
-  color: @errorColor;
+  color: @text-color-error;
 }
 
 .line-number.glsl-preview-error {
-  border-right: 2px solid @errorColor;
+  border-right: 2px solid @text-color-error;
 }

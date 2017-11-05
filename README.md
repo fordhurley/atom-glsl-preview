@@ -55,18 +55,6 @@ If enabled in the package settings, a notification will show the error message:
 <img width="461" alt="error notification" src="https://cdn.rawgit.com/fordhurley/atom-glsl-preview/master/assets/error-notification.png">
 
 
-## Capture images
-
-Right click on the preview to copy or save a still image of the shader. This can
-also be done by running the command "Glsl Preview: Copy Image" or
-"Glsl Preview: Save Image" from the command palette (`cmd-shift-P`).
-
-
-## Examples
-
-Example shaders can be found in the `examples/` directory.
-
-
 ## glslify
 
 Supports [glslify](https://github.com/glslify/glslify) for importing glsl
@@ -80,10 +68,44 @@ modules.
 #pragma glslify: rainbow = require('glsl-colormap/rainbow')
 ```
 
+
+## Capturing images
+
+Right click on the preview to copy or save a still image of the shader. This can
+also be done by running the command "Glsl Preview: Copy Image" or
+"Glsl Preview: Save Image" from the command palette (`cmd-shift-P`).
+
+
+## Exporting videos
+
+*Note: This is an experimental feature. Please
+[report any issues](https://github.com/fordhurley/atom-glsl-preview/issues).*
+
+Run the command "Glsl Preview: Save Video" to export a video of your shader.
+[ffmpeg](https://ffmpeg.org/) must be installed on your system, and Atom must be
+able to find the executable in the `PATH`.
+
+The dimensions of the video will match the current size of the preview,
+including `devicePixelRatio`, so resize the preview first to get the desired
+size.
+
+You will be prompted for the length of the video in seconds. The
+`iGlobalTime`/`u_time` uniform will reset to zero when recording starts, and the
+uniform will be updated each frame to match the video's time, making the timing
+of your shader independent from the time it takes to render and encode each
+frame. That means you can write crazy slow shaders and still get a perfect
+recording!
+
+
 ## Frag snippet
 
 Create a new .glsl file, type `frag`, and hit enter. This will output the base
 fragment shader code to get started from.
+
+
+## Examples
+
+Example shaders can be found in the `examples/` directory.
 
 
 ## Credits

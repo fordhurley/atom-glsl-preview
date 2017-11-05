@@ -1,3 +1,7 @@
+# Unreleased
+
+- Add "Save video" command for exporting recordings.
+
 # v1.3.0
 
 - Add glslify support.

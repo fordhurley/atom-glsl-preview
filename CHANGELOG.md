@@ -1,3 +1,8 @@
+# Unreleased
+
+- Make default uniforms optional. (@andystanton)
+- Better shader error handling. (@andystanton)
+
 # v1.3.0
 
 - Add glslify support.

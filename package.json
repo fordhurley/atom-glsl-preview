@@ -16,7 +16,7 @@
   "dependencies": {
     "glslify": "^6.1.0",
     "interactjs": "^1.2.9",
-    "shader-canvas": "git://github.com/andystanton/shader-canvas.git#make-default-uniforms-optional-fix-error-display",
+    "shader-canvas": "^0.3.0",
     "underscore": "^1.8.3"
   },
   "devDependencies": {

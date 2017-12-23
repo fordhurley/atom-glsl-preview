@@ -2,6 +2,11 @@
 
 - Add "Save video" command for exporting recordings.
 
+# v1.4.0
+
+- Make default uniforms optional. (@andystanton)
+- Better shader error handling. (@andystanton)
+
 # v1.3.0
 
 - Add glslify support.

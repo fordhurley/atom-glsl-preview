@@ -1,4 +1,4 @@
-# Unreleased
+# v1.4.0
 
 - Make default uniforms optional. (@andystanton)
 - Better shader error handling. (@andystanton)

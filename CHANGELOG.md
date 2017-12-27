@@ -1,3 +1,7 @@
+# Unreleased
+
+- Fixed a bug where the preview wouldn't activate for the first editor.
+
 # v1.4.0
 
 - Make default uniforms optional. (@andystanton)

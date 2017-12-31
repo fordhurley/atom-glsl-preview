@@ -1,4 +1,4 @@
-# Unreleased
+# v1.4.1
 
 - Fixed a bug where the preview wouldn't activate for the first editor.
 - Previous shader isn't removed if the new shader has errors.

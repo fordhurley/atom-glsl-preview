@@ -1,3 +1,7 @@
+# Unreleased
+
+- Add "Save video" command for exporting recordings.
+
 # v1.4.2
 
 - More accurate line numbers in error messages, even when using glslify.

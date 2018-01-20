@@ -16,5 +16,6 @@ module.exports = {
     "object-curly-spacing": ["error", "never"],
     "no-unused-vars": ["error", {"args": "none"}],
     "comma-dangle": ["error", "only-multiline", {"functions": "never"}],
+    "arrow-body-style": ["error", "as-needed", {"requireReturnForObjectLiteral": true}],
   },
 };

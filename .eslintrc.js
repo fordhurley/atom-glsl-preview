@@ -14,5 +14,7 @@ module.exports = {
     "import/no-unresolved": ["error", {"ignore": ["atom", "electron"] }],
     "import/no-extraneous-dependencies": ["off"],
     "object-curly-spacing": ["error", "never"],
+    "no-unused-vars": ["error", {"args": "none"}],
+    "comma-dangle": ["error", "only-multiline", {"functions": "never"}],
   },
 };

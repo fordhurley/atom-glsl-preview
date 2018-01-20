@@ -2,6 +2,15 @@
 
 - Add "Save video" command for exporting recordings.
 
+# v1.4.2
+
+- More accurate line numbers in error messages, even when using glslify.
+
+# v1.4.1
+
+- Fixed a bug where the preview wouldn't activate for the first editor.
+- Previous shader isn't removed if the new shader has errors.
+
 # v1.4.0
 
 - Make default uniforms optional. (@andystanton)

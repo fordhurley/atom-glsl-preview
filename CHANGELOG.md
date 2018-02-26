@@ -1,4 +1,8 @@
-# v1.4.3
+# v1.4.4
+
+- Skip that last version of broken shader-canvas as well.
+
+# v1.4.3 [broken]
 
 - Update shader-canvas to skip version that doesn't use node-style exports.
 

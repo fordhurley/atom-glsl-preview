@@ -1,3 +1,7 @@
+# v1.4.3
+
+- Update shader-canvas to skip version that doesn't use node-style exports.
+
 # v1.4.2
 
 - More accurate line numbers in error messages, even when using glslify.

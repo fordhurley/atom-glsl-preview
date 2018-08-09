@@ -1,3 +1,7 @@
+# v1.4.6
+
+- Upgrade ESLint (Lodash) in response to Github security alert. [CVE-2018-3721](https://nvd.nist.gov/vuln/detail/CVE-2018-3721)
+
 # v1.4.5
 
 - Upgrade dependencies in response to Github security alert. [CVE-2017-16226](https://nvd.nist.gov/vuln/detail/CVE-2017-16226)

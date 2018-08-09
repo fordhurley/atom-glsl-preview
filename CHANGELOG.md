@@ -1,3 +1,7 @@
+# v1.4.5
+
+- Upgrade dependencies in response to Github security alert. [CVE-2017-16226](https://nvd.nist.gov/vuln/detail/CVE-2017-16226)
+
 # v1.4.4
 
 - Skip that last version of broken shader-canvas as well.

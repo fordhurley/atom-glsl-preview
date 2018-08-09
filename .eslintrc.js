@@ -2,20 +2,20 @@ module.exports = {
   env: {
     node: true,
     browser: true,
+    es6: true,
   },
   globals: {
     atom: false,
   },
-  extends: "airbnb",
+  parserOptions: {
+    ecmaVersion: 6,
+  },
+  extends: ["eslint:recommended", "google"],
   rules: {
     "quotes": ["error", "double"],
-    "no-plusplus": ["error", {"allowForLoopAfterthoughts": true}],
-    "no-underscore-dangle": ["error", {"allowAfterThis": true}],
-    "import/no-unresolved": ["error", {"ignore": ["atom", "electron"] }],
-    "import/no-extraneous-dependencies": ["off"],
-    "object-curly-spacing": ["error", "never"],
-    "no-unused-vars": ["error", {"args": "none"}],
-    "comma-dangle": ["error", "only-multiline", {"functions": "never"}],
-    "arrow-body-style": ["error", "as-needed", {"requireReturnForObjectLiteral": true}],
+    "require-jsdoc": "off",
+    "max-len": ["error", {"code": 100, "ignoreTrailingComments": true}],
+    "block-spacing": ["error", "always"],
+    "brace-style": ["error", "1tbs", {"allowSingleLine": true}],
   },
 };

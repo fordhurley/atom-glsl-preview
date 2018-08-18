@@ -88,6 +88,8 @@ fragment shader code to get started from.
 
 ## Credits
 
+[@amelierosser](https://github.com/amelierosser) for starting the project.
+
 [Markdown Preview](https://github.com/atom/markdown-preview) for the boilerplate
 code.
 

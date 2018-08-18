@@ -1,3 +1,7 @@
+# UNRELEASED
+
+- Add constrainToSquare option.
+
 # v1.4.6
 
 - Upgrade ESLint (Lodash) in response to Github security alert. [CVE-2018-3721](https://nvd.nist.gov/vuln/detail/CVE-2018-3721)

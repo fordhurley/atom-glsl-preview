@@ -94,3 +94,7 @@ fragment shader code to get started from.
 code.
 
 [three.js](http://threejs.org/) for simplifying WebGL.
+
+
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/fordhurley/atom-glsl-preview.svg)](https://greenkeeper.io/)

@@ -20,7 +20,7 @@ jobs:
     - image: circleci/node:latest
     steps:
     - checkout
-    - run: npm install -g greenkeeper-lockfile
+    - run: sudo npm install -g greenkeeper-lockfile
     - run: greenkeeper-lockfile-update
     - run:
         name: Update system package lists

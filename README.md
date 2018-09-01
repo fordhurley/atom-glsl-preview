@@ -1,5 +1,7 @@
 # GLSL Preview package
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/fordhurley/atom-glsl-preview.svg)](https://greenkeeper.io/)
+
 Live preview fragment shaders in the Atom editor, with `ctrl-shift-G`.
 
 <img width="800" alt="screenshot" src="https://cdn.rawgit.com/fordhurley/atom-glsl-preview/master/assets/screenshot.jpg">

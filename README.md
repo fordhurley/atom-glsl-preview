@@ -110,7 +110,13 @@ Example shaders can be found in the `examples/` directory.
 
 ## Credits
 
+[@amelierosser](https://github.com/amelierosser) for starting the project.
+
 [Markdown Preview](https://github.com/atom/markdown-preview) for the boilerplate
 code.
 
 [three.js](http://threejs.org/) for simplifying WebGL.
+
+
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/fordhurley/atom-glsl-preview.svg)](https://greenkeeper.io/)

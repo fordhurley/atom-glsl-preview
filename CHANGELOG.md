@@ -1,6 +1,23 @@
-# Unreleased
+# UNRELEASED
 
+- Add constrainToSquare option.
 - Add "Save video" command for exporting recordings.
+
+# v1.4.6
+
+- Upgrade ESLint (Lodash) in response to Github security alert. [CVE-2018-3721](https://nvd.nist.gov/vuln/detail/CVE-2018-3721)
+
+# v1.4.5
+
+- Upgrade dependencies in response to Github security alert. [CVE-2017-16226](https://nvd.nist.gov/vuln/detail/CVE-2017-16226)
+
+# v1.4.4
+
+- Skip that last version of broken shader-canvas as well.
+
+# v1.4.3 [broken]
+
+- Update shader-canvas to skip version that doesn't use node-style exports.
 
 # v1.4.2
 

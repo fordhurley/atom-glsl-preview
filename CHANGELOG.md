@@ -1,4 +1,4 @@
-# UNRELEASED
+# v1.5.0
 
 - Add constrainToSquare option.
 - Remove includeDefaultUniforms option, because shader-canvas can detect this

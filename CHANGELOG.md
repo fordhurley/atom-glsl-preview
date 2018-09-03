@@ -1,6 +1,9 @@
-# UNRELEASED
+# v1.5.0
 
 - Add constrainToSquare option.
+- Remove includeDefaultUniforms option, because shader-canvas can detect this
+  pretty well. It might be necessary to add an option or support a `#pragma`
+  if auto-detecting doesn't work well enough, but that can be added later.
 - Add "Save video" command for exporting recordings.
 
 # v1.4.6

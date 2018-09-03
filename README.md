@@ -10,18 +10,17 @@ for syntax highlighting.
 
 ## Uniforms
 
-The following default uniforms are included, no need to add these into your
-fragment shaders. Uncheck `Include default uniforms` in the package settings to
-declare these yourself.
+The following default uniforms are available to your shader.
 
 ```glsl
-uniform vec2 iResolution; // size of the preview
-uniform vec2 iMouse; // cursor in normalized coordinates [0, 1)
-uniform float iGlobalTime; // clock in seconds
+uniform vec2 u_resolution; // size of the preview
+uniform vec2 u_mouse; // cursor in normalized coordinates [0, 1)
+uniform float u_time; // clock in seconds
 ```
 
-The variants `u_resolution`, `u_mouse` and `u_time` can also be used to match
-the style found in [The Book of Shaders](http://thebookofshaders.com/).
+The variants `iResolution`, `iMouse` and `iGlobalTime` can also be used for
+legacy reasons.
+
 
 ## Textures
 

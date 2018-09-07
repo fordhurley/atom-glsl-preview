@@ -1,3 +1,7 @@
+# Unreleased
+
+- Avoid shader-canvas error when switching textures: [shader-canvas#8](https://github.com/fordhurley/shader-canvas/pull/8)
+
 # v1.5.0
 
 - Add constrainToSquare option.

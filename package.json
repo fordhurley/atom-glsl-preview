@@ -1,6 +1,6 @@
 {
   "name": "glsl-preview",
-  "version": "1.5.0",
+  "version": "2.0.0",
   "main": "./lib/main",
   "description": "Live preview fragment shaders in the current editor with `ctrl-shift-G`.",
   "keywords": [
@@ -15,13 +15,13 @@
   },
   "dependencies": {
     "ffmpeg-stream": "^0.5.0",
-    "glslify": "^6.2.1",
+    "glslify": "^7.0.0",
     "interactjs": "^1.2.9",
-    "shader-canvas": ">=0.6.1",
+    "shader-canvas": "^0.8.0",
     "underscore": "^1.8.3"
   },
   "devDependencies": {
     "eslint": "^5.5.0",
-    "eslint-config-google": "^0.10.0"
+    "eslint-config-google": "^0.11.0"
   }
 }

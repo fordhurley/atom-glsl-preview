@@ -1,8 +1,11 @@
+precision mediump float;
+
+uniform vec2 u_resolution;
 uniform sampler2D u_mainTex; // ../assets/grace_hopper.jpg
 
 void main() {
-  vec2 uv = gl_FragCoord.xy/iResolution.xy;
-  float aspect = iResolution.x / iResolution.y;
+  vec2 uv = gl_FragCoord.xy / u_resolution;
+  float aspect = u_resolution.x / u_resolution.y;
 
   // Preserve aspect ratio of the image:
   uv.x *= aspect;

@@ -1,6 +1,10 @@
-# Unreleased
+# v2.0.0
 
-- Avoid shader-canvas error when switching textures: [shader-canvas#8](https://github.com/fordhurley/shader-canvas/pull/8)
+- Upgrade shader-canvas to v0.8.0, with no dependency on Threejs, for a much
+  smaller package and better performance. NOTE: this may be a breaking change
+  for some shaders. In most cases, you can fix your shader by simply declaring
+  the uniforms you are using and/or adding precision qualifiers (see the
+  examples).
 
 # v1.5.0
 

@@ -1,3 +1,8 @@
+# Unreleased
+
+- [#51](https://github.com/fordhurley/atom-glsl-preview/issues/51): Fix "uniform
+  location" error when uniform is defined but unused.
+
 # v2.0.0
 
 - Upgrade shader-canvas to v0.8.0, with no dependency on Threejs, for a much

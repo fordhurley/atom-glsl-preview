@@ -1,3 +1,7 @@
+# Unreleased
+
+- Routine dependency updates
+
 # v2.0.1
 
 - [#51](https://github.com/fordhurley/atom-glsl-preview/issues/51): Fix "uniform

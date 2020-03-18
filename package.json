@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "glslify": "^7.0.0",
-    "interactjs": "^1.4.10",
+    "interactjs": "^1.9.6",
     "shader-canvas": "^0.8.3",
     "underscore": "^1.8.3"
   },
